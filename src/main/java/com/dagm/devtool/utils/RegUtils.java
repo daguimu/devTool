@@ -18,20 +18,20 @@ import java.util.regex.Pattern;
 public class RegUtils {
 
     /**
+     * @return boolean
      * @author dagm
      * @version 0.0.1
      * @since 1.8
-     * @return boolean
      */
     public static boolean test(String reg, String source) {
         return Pattern.matches(reg, source);
     }
 
     /**
+     * @return List
      * @author dagm
      * @version 0.0.1
      * @since 1.8
-     * @return List
      */
     public static List<String> getPatternContent(String reg, String source) {
         List<String> resultList = new ArrayList<>();
