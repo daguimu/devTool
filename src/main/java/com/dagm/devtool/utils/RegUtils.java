@@ -20,7 +20,6 @@ public class RegUtils {
     /**
      * @return boolean
      * @author dagm
-     *
      * @since 1.8
      */
     public static boolean test(String reg, String source) {
