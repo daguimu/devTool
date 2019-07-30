@@ -20,7 +20,6 @@ public class RegUtils {
     /**
      * @return boolean
      * @author dagm
-     * @version 0.0.1
      * @since 1.8
      */
     public static boolean test(String reg, String source) {
@@ -30,7 +29,6 @@ public class RegUtils {
     /**
      * @return List
      * @author dagm
-     * @version 0.0.1
      * @since 1.8
      */
     public static List<String> getPatternContent(String reg, String source) {
