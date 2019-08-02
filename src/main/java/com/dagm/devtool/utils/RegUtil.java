@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  *
  * @author: Guimu
  */
-public class RegUtils {
+public class RegUtil {
 
     /**
      * @return boolean
