@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * 字符串正则相关工具包
  *
- * @author: Guimu
+ * @ author: Guimu
  */
 public class RegUtil {
 

@@ -12,7 +12,6 @@ import lombok.Getter;
  * 时间格式枚举类
  *
  * @author: Guimu
- * @created: 2019/08/05
  */
 @AllArgsConstructor
 @Getter

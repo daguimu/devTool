@@ -10,7 +10,6 @@ import lombok.Getter;
 
 /**
  * @author: Guimu
- * @created: 2019/08/05
  */
 @AllArgsConstructor
 @Getter

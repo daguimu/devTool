@@ -14,8 +14,7 @@ import java.util.stream.Stream;
 /**
  * 分页索引计算相关
  *
- * @author: Guimu
- * @created: 2019/08/05
+ * @ author: Guimu
  */
 //@UtilityClass
 public class PageUtil {

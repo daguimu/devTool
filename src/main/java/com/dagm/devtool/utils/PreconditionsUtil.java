@@ -10,8 +10,7 @@ import com.google.common.base.Preconditions;
 import lombok.experimental.UtilityClass;
 
 /**
- * @author: Guimu
- * @created: 2019/08/05
+ * @ author: Guimu
  */
 @UtilityClass
 public class PreconditionsUtil {
