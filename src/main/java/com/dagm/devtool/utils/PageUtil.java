@@ -14,11 +14,18 @@ import java.util.stream.Stream;
 /**
  * 分页索引计算相关
  *
- * @ author: Guimu
+ * @author: Guimu
  */
 //@UtilityClass
 public class PageUtil {
 
+    /**
+     * 根据页码和页大小获取分页的PageAssist,以获取分页的start 和end 参数
+     *
+     * @param pageSize 页大小
+     * @param page 页码
+     * @return PageAssist
+     */
     public PageAssist getPageAssist(Integer page, Integer pageSize) {
         long begin = (page - 1) * pageSize;
         long end = begin + pageSize - 1;
@@ -28,6 +35,10 @@ public class PageUtil {
 
     /**
      * 根据total 总数获取每一页分页数据的 分页偏移量, 获取所有页
+     *
+     * @param pageSize 页大小
+     * @param total 数据总数
+     * @return List
      */
     public List<PageAssist> getPageAssistForPageList(Integer pageSize, Long total) {
         long pageCount = total % pageSize == 0 ? total / pageSize : (total / pageSize) + 1;
@@ -37,6 +48,11 @@ public class PageUtil {
 
     /**
      * 根据total 总数获取每一页分页数据的 分页偏移量获取前pageNumber页
+     *
+     * @param pageSize 页大小
+     * @param total 数据总数
+     * @param pageNumber 页码
+     * @return List
      */
     public List<PageAssist> getPageAssistForPageList(Integer pageSize, Long total,
         Integer pageNumber) {
@@ -52,7 +68,11 @@ public class PageUtil {
                 Collectors.toList());
     }
 
-
+    /**
+     * 检查pageCount 参数的范围
+     *
+     * @param pageCount 页码数
+     */
     private void checkPageCount(long pageCount) {
         Preconditions
             .checkArgument(pageCount >= Integer.MIN_VALUE && pageCount <= Integer.MAX_VALUE,

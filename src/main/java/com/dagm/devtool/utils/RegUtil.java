@@ -13,11 +13,13 @@ import java.util.regex.Pattern;
 /**
  * 字符串正则相关工具包
  *
- * @ author: Guimu
+ * @author: Guimu
  */
 public class RegUtil {
 
     /**
+     * @param reg 正则表达式
+     * @param source 待校验的员数据
      * @return boolean
      * @author dagm
      * @since 1.8
@@ -27,6 +29,8 @@ public class RegUtil {
     }
 
     /**
+     * @param reg 正则表达式
+     * @param source 源数据
      * @return List
      * @author dagm
      * @since 1.8

@@ -10,13 +10,16 @@ import com.google.common.base.Preconditions;
 import lombok.experimental.UtilityClass;
 
 /**
- * @ author: Guimu
+ * @author: Guimu
  */
 @UtilityClass
 public class PreconditionsUtil {
 
     /**
      * 表达式校验
+     *
+     * @param expression 待校验的表达式
+     * @param code 基础错误码
      */
     public void checkArgument(boolean expression, BaseCode code) {
         Preconditions.checkArgument(expression,
