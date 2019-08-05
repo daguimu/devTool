@@ -5,10 +5,11 @@
  */
 package com.dagm.devtool.utils;
 
-import static com.dagm.devtool.enums.DateFormatEnum.GENERAL_TIME_FORMAT;
+import static com.dagm.devtool.common.BaseErrorCode.OUTTER_PARAM_ERROR;
 
 import com.dagm.devtool.enums.DateFormatEnum;
-import org.junit.Test;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 时间工具类
@@ -16,19 +17,39 @@ import org.junit.Test;
  * @author: Guimu
  * @created: 2019/08/02 * @since 1.8
  */
+
+//@UtilityClass
 public class DateTimeUtil {
 
+    /**
+     * 检查 dateTime 是否符合 formatEnum 所对应的格式;例如 20:19:62 为false，09-31 为true
+     *
+     * @return boolean
+     * @author dagm
+     * @since 1.8
+     */
     public boolean checkDateFormat(String dateTime, DateFormatEnum formatEnum) {
-        String format = formatEnum.getFormat();
-        String reg = format.replaceAll("([ymhdHMs]{2,})",
-            "\\d{" + ("$0".length()) + "}");
-        System.out.println(dateTime);
-        System.out.println(reg);
-        return RegUtil.test(reg, dateTime);
+        return RegUtil.test(formatEnum.getReg(), dateTime);
     }
 
-    @Test
-    public void test() {
-        System.out.println(this.checkDateFormat("2019-09-08 18:32:21", GENERAL_TIME_FORMAT));
+    /**
+     * 将时间字符串转换成对应的LocalDateTime
+     *
+     * @return LocalDateTime
+     */
+    public LocalDateTime strToLocalDateTime(String timeStr, DateFormatEnum formatEnum) {
+        PreconditionsUtil.checkArgument(checkDateFormat(timeStr, formatEnum), OUTTER_PARAM_ERROR);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern(formatEnum.getFormat());
+        return LocalDateTime.parse(timeStr, df);
+    }
+
+    /**
+     * 获取指定格式的时间
+     *
+     * @return String
+     */
+    public String getCurrentTimeAsStr(DateFormatEnum formatEnum) {
+        DateTimeFormatter df = DateTimeFormatter.ofPattern(formatEnum.getFormat());
+        return df.format(LocalDateTime.now());
     }
 }
