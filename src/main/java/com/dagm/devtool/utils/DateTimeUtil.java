@@ -8,8 +8,10 @@ package com.dagm.devtool.utils;
 import static com.dagm.devtool.common.BaseErrorCode.OUTTER_PARAM_ERROR;
 
 import com.dagm.devtool.enums.DateFormatEnum;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import lombok.experimental.UtilityClass;
 
 /**
  * 时间工具类
@@ -17,8 +19,7 @@ import java.time.format.DateTimeFormatter;
  * @author: Guimu
  * @created: 2019/08/02 * @since 1.8
  */
-
-//@UtilityClass
+@UtilityClass
 public class DateTimeUtil {
 
     /**
@@ -44,12 +45,39 @@ public class DateTimeUtil {
     }
 
     /**
-     * 获取指定格式的时间
+     * 以指定格式,获取当前时间
      *
      * @return String
      */
     public String getCurrentTimeAsStr(DateFormatEnum formatEnum) {
+        return dateToLocalDateTime(LocalDateTime.now(), formatEnum);
+    }
+
+
+    /**
+     * 将localDateTime 转换成指定的时间格式
+     */
+    public String dateToLocalDateTime(LocalDateTime localDateTime, DateFormatEnum formatEnum) {
         DateTimeFormatter df = DateTimeFormatter.ofPattern(formatEnum.getFormat());
-        return df.format(LocalDateTime.now());
+        return df.format(localDateTime);
+    }
+
+    /**
+     * 计算获取两个时间字符串的时间差
+     */
+    public Duration dateDiff(String startTime, String endTime, DateFormatEnum startFormatEnum,
+        DateFormatEnum endFormatEnum) {
+        LocalDateTime startLocalTime = strToLocalDateTime(startTime, startFormatEnum);
+        LocalDateTime endLocalTime = strToLocalDateTime(endTime, endFormatEnum);
+        return Duration.between(startLocalTime, endLocalTime);
+    }
+
+    /**
+     * 计算获取两个时间字符串的时间差
+     */
+    public Duration dateDiff(String startTime, String endTime, DateFormatEnum formatEnum) {
+        LocalDateTime startLocalTime = strToLocalDateTime(startTime, formatEnum);
+        LocalDateTime endLocalTime = strToLocalDateTime(endTime, formatEnum);
+        return Duration.between(startLocalTime, endLocalTime);
     }
 }
