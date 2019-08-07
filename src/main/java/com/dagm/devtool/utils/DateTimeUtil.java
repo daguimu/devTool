@@ -10,7 +10,10 @@ import static com.dagm.devtool.common.BaseErrorCode.OUTTER_PARAM_ERROR;
 import com.dagm.devtool.enums.DateFormatEnum;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import lombok.experimental.UtilityClass;
 
 /**
@@ -98,5 +101,29 @@ public class DateTimeUtil {
         LocalDateTime startLocalTime = strToLocalDateTime(startTime, formatEnum);
         LocalDateTime endLocalTime = strToLocalDateTime(endTime, formatEnum);
         return Duration.between(startLocalTime, endLocalTime);
+    }
+
+    /**
+     * 将时间字符串timeStr 转换成对应的Date 对象
+     *
+     * @param timeStr 字符串时间源数据
+     * @param formatEnum 字符串时间的格式
+     * @return Date 时间对象
+     */
+    public Date timeStrToDate(String timeStr, DateFormatEnum formatEnum) {
+        LocalDateTime localDateTime = DateTimeUtil.strToLocalDateTime(timeStr, formatEnum);
+        return localDateTimeToDate(localDateTime);
+    }
+
+    /**
+     * 将localDateTime 对象转为Date
+     *
+     * @param localDateTime 时间数据源
+     * @return Date 时间对象
+     */
+    public Date localDateTimeToDate(LocalDateTime localDateTime) {
+        ZoneId zoneId = ZoneId.systemDefault();
+        ZonedDateTime zdt = localDateTime.atZone(zoneId);
+        return Date.from(zdt.toInstant());
     }
 }

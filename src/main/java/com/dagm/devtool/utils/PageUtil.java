@@ -10,13 +10,14 @@ import com.google.common.base.Preconditions;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import lombok.experimental.UtilityClass;
 
 /**
  * 分页索引计算相关
  *
  * @author: Guimu
  */
-//@UtilityClass
+@UtilityClass
 public class PageUtil {
 
     /**
