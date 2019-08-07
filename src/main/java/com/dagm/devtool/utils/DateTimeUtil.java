@@ -145,7 +145,7 @@ public class DateTimeUtil {
      * 将对象Date 转为localDateTime
      *
      * @param date 时间数据源
-     * @return Date 时间对象
+     * @return LocalDateTime 时间对象
      */
     public LocalDateTime localDateTimeToDate(Date date) {
         Instant instant = date.toInstant();
