@@ -8,7 +8,9 @@ package com.dagm.devtool.utils;
 import static com.dagm.devtool.common.BaseErrorCode.OUTTER_PARAM_ERROR;
 
 import com.dagm.devtool.enums.DateFormatEnum;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -125,5 +127,29 @@ public class DateTimeUtil {
         ZoneId zoneId = ZoneId.systemDefault();
         ZonedDateTime zdt = localDateTime.atZone(zoneId);
         return Date.from(zdt.toInstant());
+    }
+
+    /**
+     * 将时间Date 转换成对应的时间字符串对
+     *
+     * @param date 时间对象源数据
+     * @param formatEnum 目标字符串时间的格式
+     * @return Date 时间对象
+     */
+    public String dateToStr(Date date, DateFormatEnum formatEnum) {
+        SimpleDateFormat sdf = new SimpleDateFormat(formatEnum.getFormat());
+        return sdf.format(date);
+    }
+
+    /**
+     * 将对象Date 转为localDateTime
+     *
+     * @param date 时间数据源
+     * @return Date 时间对象
+     */
+    public LocalDateTime localDateTimeToDate(Date date) {
+        Instant instant = date.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        return instant.atZone(zoneId).toLocalDateTime();
     }
 }
