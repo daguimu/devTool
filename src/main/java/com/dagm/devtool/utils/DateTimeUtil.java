@@ -154,11 +154,12 @@ public class DateTimeUtil {
         return instant.atZone(zoneId).toLocalDateTime();
     }
 
+
     /**
      * 获取当前时间戳毫秒
      *
-     * @author: Guimu
-     * @created: 2019-08-20
+     *
+     * @return Long 时间对象
      */
     public Long currentTimeStamp() {
         return LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
