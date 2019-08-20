@@ -13,6 +13,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -151,5 +152,15 @@ public class DateTimeUtil {
         Instant instant = date.toInstant();
         ZoneId zoneId = ZoneId.systemDefault();
         return instant.atZone(zoneId).toLocalDateTime();
+    }
+
+    /**
+     * 获取当前时间戳毫秒
+     *
+     * @author: Guimu
+     * @created: 2019-08-20
+     */
+    public Long currentTimeStamp() {
+        return LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
     }
 }
