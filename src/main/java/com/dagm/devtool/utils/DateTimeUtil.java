@@ -17,14 +17,12 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import lombok.experimental.UtilityClass;
 
 /**
  * 时间工具类
  *
  * @author: Guimu
  */
-@UtilityClass
 public class DateTimeUtil {
 
     /**
@@ -36,8 +34,20 @@ public class DateTimeUtil {
      * @author dagm
      * @since 1.8
      */
-    public boolean checkDateFormat(String dateTime, DateFormatEnum formatEnum) {
+    public static boolean checkDateFormat(String dateTime, DateFormatEnum formatEnum) {
         return RegUtil.test(formatEnum.getReg(), dateTime);
+    }
+
+    /**
+     * 毫秒级时间戳转字符串
+     *
+     * @param millTimeStamp 毫秒级时间戳
+     * @param formatEnum 字符串日期格式
+     * @author: Guimu
+     */
+    public static String millTimeStampToStr(long millTimeStamp, DateFormatEnum formatEnum) {
+        Date date = new Date(millTimeStamp);
+        return dateToStr(date, formatEnum);
     }
 
     /**
@@ -47,7 +57,7 @@ public class DateTimeUtil {
      * @param timeStr 原时间字符串
      * @return LocalDateTime
      */
-    public LocalDateTime strToLocalDateTime(String timeStr, DateFormatEnum formatEnum) {
+    public static LocalDateTime strToLocalDateTime(String timeStr, DateFormatEnum formatEnum) {
         PreconditionsUtil.checkArgument(checkDateFormat(timeStr, formatEnum), OUTTER_PARAM_ERROR);
         DateTimeFormatter df = DateTimeFormatter.ofPattern(formatEnum.getFormat());
         return LocalDateTime.parse(timeStr, df);
@@ -59,7 +69,7 @@ public class DateTimeUtil {
      * @param formatEnum 时间格式
      * @return String
      */
-    public String getCurrentTimeAsStr(DateFormatEnum formatEnum) {
+    public static String getCurrentTimeAsStr(DateFormatEnum formatEnum) {
         return dateToLocalDateTime(LocalDateTime.now(), formatEnum);
     }
 
@@ -71,7 +81,8 @@ public class DateTimeUtil {
      * @param localDateTime 源数据时间
      * @return 时间字符串
      */
-    public String dateToLocalDateTime(LocalDateTime localDateTime, DateFormatEnum formatEnum) {
+    public static String dateToLocalDateTime(LocalDateTime localDateTime,
+        DateFormatEnum formatEnum) {
         DateTimeFormatter df = DateTimeFormatter.ofPattern(formatEnum.getFormat());
         return df.format(localDateTime);
     }
@@ -85,7 +96,8 @@ public class DateTimeUtil {
      * @param endFormatEnum 结束时间格式
      * @return Duration 时间差对象
      */
-    public Duration dateDiff(String startTime, String endTime, DateFormatEnum startFormatEnum,
+    public static Duration dateDiff(String startTime, String endTime,
+        DateFormatEnum startFormatEnum,
         DateFormatEnum endFormatEnum) {
         LocalDateTime startLocalTime = strToLocalDateTime(startTime, startFormatEnum);
         LocalDateTime endLocalTime = strToLocalDateTime(endTime, endFormatEnum);
@@ -100,7 +112,7 @@ public class DateTimeUtil {
      * @param formatEnum 时间格式
      * @return Duration 时间差对象
      */
-    public Duration dateDiff(String startTime, String endTime, DateFormatEnum formatEnum) {
+    public static Duration dateDiff(String startTime, String endTime, DateFormatEnum formatEnum) {
         LocalDateTime startLocalTime = strToLocalDateTime(startTime, formatEnum);
         LocalDateTime endLocalTime = strToLocalDateTime(endTime, formatEnum);
         return Duration.between(startLocalTime, endLocalTime);
@@ -113,7 +125,7 @@ public class DateTimeUtil {
      * @param formatEnum 字符串时间的格式
      * @return Date 时间对象
      */
-    public Date timeStrToDate(String timeStr, DateFormatEnum formatEnum) {
+    public static Date timeStrToDate(String timeStr, DateFormatEnum formatEnum) {
         LocalDateTime localDateTime = DateTimeUtil.strToLocalDateTime(timeStr, formatEnum);
         return localDateTimeToDate(localDateTime);
     }
@@ -124,7 +136,7 @@ public class DateTimeUtil {
      * @param localDateTime 时间数据源
      * @return Date 时间对象
      */
-    public Date localDateTimeToDate(LocalDateTime localDateTime) {
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
         ZoneId zoneId = ZoneId.systemDefault();
         ZonedDateTime zdt = localDateTime.atZone(zoneId);
         return Date.from(zdt.toInstant());
@@ -137,7 +149,7 @@ public class DateTimeUtil {
      * @param formatEnum 目标字符串时间的格式
      * @return Date 时间对象
      */
-    public String dateToStr(Date date, DateFormatEnum formatEnum) {
+    public static String dateToStr(Date date, DateFormatEnum formatEnum) {
         SimpleDateFormat sdf = new SimpleDateFormat(formatEnum.getFormat());
         return sdf.format(date);
     }
@@ -148,7 +160,7 @@ public class DateTimeUtil {
      * @param date 时间数据源
      * @return LocalDateTime 时间对象
      */
-    public LocalDateTime localDateTimeToDate(Date date) {
+    public static LocalDateTime localDateTimeToDate(Date date) {
         Instant instant = date.toInstant();
         ZoneId zoneId = ZoneId.systemDefault();
         return instant.atZone(zoneId).toLocalDateTime();
@@ -158,10 +170,9 @@ public class DateTimeUtil {
     /**
      * 获取当前时间戳毫秒
      *
-     *
      * @return Long 时间对象
      */
-    public Long currentTimeStamp() {
+    public static Long currentTimeStamp() {
         return LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
     }
 }
