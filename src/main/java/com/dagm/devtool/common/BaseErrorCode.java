@@ -30,6 +30,10 @@ public enum BaseErrorCode implements BaseCode {
      * 未知错误
      */
     UNKNOW_ERROR("9004", "未知错误"),
+    /**
+     * 业务异常
+     */
+    BUSINESS_ERROR("9005", "业务异常"),
     ;
 
     private String code;
