@@ -173,8 +173,7 @@ public class DateTimeUtil {
      */
     public static LocalDateTime localDateTimeToDate(Date date) {
         Instant instant = date.toInstant();
-        ZoneId zoneId = ZoneId.systemDefault();
-        return instant.atZone(zoneId).toLocalDateTime();
+        return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
 
