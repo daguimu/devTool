@@ -162,8 +162,7 @@ public class DateTimeUtil {
      * @return Date 时间对象
      */
     public static String timeStampToStr(Long time, DateFormatEnum formatEnum) {
-        SimpleDateFormat sdf = new SimpleDateFormat(formatEnum.getFormat());
-        return sdf.format(time);
+        return new SimpleDateFormat(formatEnum.getFormat()).format(time);
     }
 
     /**
