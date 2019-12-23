@@ -45,7 +45,7 @@ public enum SensitiveTypeEnum {
     /**
      * [公司开户银行联号] 公司开户银行联行号,显示前两位，其他用星号隐藏，每位1个星号<例:12********>
      */
-    CNAPS_CODE(2, (el) -> SensitiveInfoUtils.cnapsCode(el.toString())),
+    CAPS_CODE(2, (el) -> SensitiveInfoUtils.cnapsCode(el.toString())),
     ;
     private Integer val;
     private Function<Object, String> deSensFunction;
