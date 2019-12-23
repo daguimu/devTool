@@ -83,8 +83,7 @@ public class DateTimeUtil {
      */
     public static String dateToLocalDateTime(LocalDateTime localDateTime,
         DateFormatEnum formatEnum) {
-        DateTimeFormatter df = DateTimeFormatter.ofPattern(formatEnum.getFormat());
-        return df.format(localDateTime);
+        return DateTimeFormatter.ofPattern(formatEnum.getFormat()).format(localDateTime);
     }
 
     /**
