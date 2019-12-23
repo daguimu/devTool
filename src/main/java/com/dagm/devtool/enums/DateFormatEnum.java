@@ -13,8 +13,9 @@ import lombok.Getter;
  *
  * @author: Guimu
  */
-@AllArgsConstructor
+
 @Getter
+@AllArgsConstructor
 public enum DateFormatEnum {
     /**
      * 大众版时间格式
