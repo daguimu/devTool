@@ -155,6 +155,18 @@ public class DateTimeUtil {
     }
 
     /**
+     * 将指定时间戳 转换成对应的时间字符串对
+     *
+     * @param time 时间对象源数据
+     * @param formatEnum 目标字符串时间的格式
+     * @return Date 时间对象
+     */
+    public static String timeStampToStr(Long time, DateFormatEnum formatEnum) {
+        SimpleDateFormat sdf = new SimpleDateFormat(formatEnum.getFormat());
+        return sdf.format(time);
+    }
+
+    /**
      * 将对象Date 转为localDateTime
      *
      * @param date 时间数据源
