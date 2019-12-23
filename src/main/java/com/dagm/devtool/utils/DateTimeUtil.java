@@ -97,8 +97,7 @@ public class DateTimeUtil {
      * @return Duration 时间差对象
      */
     public static Duration dateDiff(String startTime, String endTime,
-        DateFormatEnum startFormatEnum,
-        DateFormatEnum endFormatEnum) {
+        DateFormatEnum startFormatEnum, DateFormatEnum endFormatEnum) {
         LocalDateTime startLocalTime = strToLocalDateTime(startTime, startFormatEnum);
         LocalDateTime endLocalTime = strToLocalDateTime(endTime, endFormatEnum);
         return Duration.between(startLocalTime, endLocalTime);
