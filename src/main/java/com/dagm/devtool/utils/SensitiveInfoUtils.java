@@ -76,6 +76,7 @@ public class SensitiveInfoUtils {
      * [固定电话] 后四位，其他隐藏 例：****1234
      * @param phone 原固定电话
      * @author Guimu
+     * @return String
      * @date 2019/12/24
      */
     public static String fixedPhone(String phone) {

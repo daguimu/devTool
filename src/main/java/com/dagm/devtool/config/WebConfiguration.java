@@ -15,8 +15,8 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
- * @author: Guimu
- * @created: 2019/10/14
+ * @author Guimu
+ * @date 2019/10/14
  */
 @Configuration
 public class WebConfiguration extends WebMvcConfigurerAdapter {

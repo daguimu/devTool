@@ -43,6 +43,7 @@ public class DateTimeUtil {
      *
      * @param millTimeStamp 毫秒级时间戳
      * @param formatEnum 字符串日期格式
+     * @return String
      * @author Guimu
      */
     public static String millTimeStampToStr(long millTimeStamp, DateFormatEnum formatEnum) {

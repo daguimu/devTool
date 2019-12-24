@@ -18,8 +18,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * @author: Guimu
- * @created: 2019/10/14
+ * @author Guimu
+ * @date 2019/10/14
  */
 public class SensitiveInfoSerialize extends JsonSerializer<Object> implements
     ContextualSerializer {
