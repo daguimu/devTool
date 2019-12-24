@@ -20,7 +20,8 @@ import java.util.Date;
 /**
  * 时间工具类
  *
- * @author: Guimu
+ * @author Guimu
+ * @date 2019/12/24
  */
 public class DateTimeUtil {
 
@@ -42,7 +43,7 @@ public class DateTimeUtil {
      *
      * @param millTimeStamp 毫秒级时间戳
      * @param formatEnum 字符串日期格式
-     * @author: Guimu
+     * @author Guimu
      */
     public static String millTimeStampToStr(long millTimeStamp, DateFormatEnum formatEnum) {
         Date date = new Date(millTimeStamp);
@@ -175,7 +176,7 @@ public class DateTimeUtil {
 
     /**
      * 获取当前时间戳毫秒
-     *
+     * @author Guimu
      * @return Long 时间对象
      */
     public static Long currentTimeStamp() {
