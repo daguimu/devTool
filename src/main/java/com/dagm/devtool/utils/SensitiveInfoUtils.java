@@ -1,17 +1,15 @@
 package com.dagm.devtool.utils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
 
 public class SensitiveInfoUtils {
 
     /**
-     * @Description [中文姓名] 只显示第一个汉字，其他隐藏为2个星号<例：张**>
-     * @Param [fullName]
-     * @Returu java.lang.String
-     * @Author zhrb
-     * @Date 9:13 2019/4/10
-     **/
+     * [中文姓名] 只显示第一个汉字，其他隐藏为2个星号<例：张**>
+     *
+     * @author: Guimu
+     * @created: 2019/12/24
+     */
     public static String chineseName(String fullName) {
         String result = "";
         if (StringUtils.isNotBlank(fullName)) {
@@ -22,12 +20,11 @@ public class SensitiveInfoUtils {
     }
 
     /**
-     * @Description 对名字长度进行判断：两个字的脱敏后面[张*];三个字的脱敏中间[张*培];四个字及以上的脱敏前两个以后的[张培**];
-     * @Param [fullName]
-     * @Returu java.lang.String
-     * @Author zhrb
-     * @Date 9:56 2019/4/10
-     **/
+     * 对名字长度进行判断：两个字的脱敏后面[张*];三个字的脱敏中间[张*培];四个字及以上的脱敏前两个以后的[张培**];
+     *
+     * @author: Guimu
+     * @created: 2019/12/24
+     */
     public static String fullChineseName(String fullName) {
         String result = "";
         if (StringUtils.isNotBlank(fullName)) {
@@ -56,12 +53,11 @@ public class SensitiveInfoUtils {
     }
 
     /**
-     * @Description [身份证号] 123****12，前面保留3位明文，后面保留2位明文
-     * @Param [id]
-     * @Returu java.lang.String
-     * @Author zhrb
-     * @Date 9:16 2019/4/10
-     **/
+     * [身份证号] 123****12，前面保留3位明文，后面保留2位明文
+     *
+     * @author: Guimu
+     * @created: 2019/12/24
+     */
     public static String identificationNum(String idcard) {
         String result = "";
         if (StringUtils.isNotBlank(idcard)) {
@@ -73,12 +69,11 @@ public class SensitiveInfoUtils {
     }
 
     /**
-     * @Description [固定电话] 后四位，其他隐藏<例：****1234>
-     * @Param [num]
-     * @Returu java.lang.String
-     * @Author zhrb
-     * @Date 9:18 2019/4/10
-     **/
+     * [固定电话] 后四位，其他隐藏<例：****1234>
+     *
+     * @author: Guimu
+     * @created: 2019/12/24
+     */
     public static String fixedPhone(String num) {
         String result = "";
         if (StringUtils.isNotBlank(num)) {
@@ -88,12 +83,11 @@ public class SensitiveInfoUtils {
     }
 
     /**
-     * @Description [手机号码] 前3位，后4位，其他隐藏<例:123****1234>
-     * @Param [num]
-     * @Returu java.lang.String
-     * @Author zhrb
-     * @Date 10:06 2019/4/10
-     **/
+     * [手机号码] 前3位，后4位，其他隐藏<例:123****1234>
+     *
+     * @author: Guimu
+     * @created: 2019/12/24
+     */
     public static String mobilePhone(String num) {
         String result = "";
         if (StringUtils.isNotBlank(num)) {
@@ -105,12 +99,11 @@ public class SensitiveInfoUtils {
     }
 
     /**
-     * @Description [地址] 只显示到地区，不显示详细地址；我们要对个人信息增强保护<例：北京****>
-     * @Param [address]  [地址]
-     * @Returu java.lang.String
-     * @Author zhrb
-     * @Date 9:20 2019/4/10
-     **/
+     * [地址] 只显示到地区，不显示详细地址；我们要对个人信息增强保护<例：北京****>
+     *
+     * @author: Guimu
+     * @created: 2019/12/24
+     */
     public static String address(String address) {
         String result = "";
         if (StringUtils.isNotBlank(address)) {
@@ -122,12 +115,11 @@ public class SensitiveInfoUtils {
     }
 
     /**
-     * @Description [电子邮箱] 邮箱前缀仅显示第一个字母，前缀其他隐藏，用星号代替，@及后面的地址显示<例:g**@163.com>
-     * @Param [email]
-     * @Returu java.lang.String
-     * @Author zhrb
-     * @Date 9:20 2019/4/10
-     **/
+     * [电子邮箱] 邮箱前缀仅显示第一个字母，前缀其他隐藏，用星号代替，@及后面的地址显示<例:g**@163.com>
+     *
+     * @author: Guimu
+     * @created: 2019/12/24
+     */
     public static String email(String email) {
         String result = "";
         if (StringUtils.isNotBlank(email)) {
@@ -143,12 +135,11 @@ public class SensitiveInfoUtils {
     }
 
     /**
-     * @Description [银行卡号] 前四位，后四位，其他用星号隐藏每位1个星号<例:6222600**********1234>
-     * @Param [cardNum]
-     * @Returu java.lang.String
-     * @Author zhrb
-     * @Date 9:21 2019/4/10
-     **/
+     * [银行卡号] 前四位，后四位，其他用星号隐藏每位1个星号<例:6222600**********1234>
+     *
+     * @author: Guimu
+     * @created: 2019/12/24
+     */
     public static String bankCard(String cardNum) {
         String result = "";
         if (StringUtils.isNotBlank(cardNum)) {
@@ -160,22 +151,16 @@ public class SensitiveInfoUtils {
     }
 
     /**
-     * @Description [公司开户银行联号] 公司开户银行联行号,显示前两位，其他用星号隐藏，每位1个星号<例:12********>
-     * @Param [code]
-     * @Returu java.lang.String
-     * @Author zhrb
-     * @Date 9:22 2019/4/10
-     **/
+     * [公司开户银行联号] 公司开户银行联行号,显示前两位，其他用星号隐藏，每位1个星号<例:12********>
+     *
+     * @author: Guimu
+     * @created: 2019/12/24
+     */
     public static String cnapsCode(String code) {
         String result = "";
         if (StringUtils.isNotBlank(code)) {
             result = StringUtils.rightPad(StringUtils.left(code, 2), StringUtils.length(code), "*");
         }
         return result;
-    }
-
-    @Test
-    public void test(){
-        System.out.printf(address("那就"));
     }
 }
