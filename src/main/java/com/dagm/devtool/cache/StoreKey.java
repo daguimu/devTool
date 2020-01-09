@@ -22,9 +22,9 @@ public class StoreKey implements Serializable {
     /**
      * Parameters
      */
-    private Object[] params;
+    private String params;
 
-    public static StoreKey valueOf(String category, Object... params) {
+    public static StoreKey valueOf(String category, String params) {
         return new StoreKey(category, params);
     }
 
@@ -39,6 +39,10 @@ public class StoreKey implements Serializable {
     public int hashCode() {
         return new HashCodeBuilder(17, 37).
             append(category).append(params).toHashCode();
+    }
+
+    public String getKey() {
+        return category + "：" + params;
     }
 
     @Override

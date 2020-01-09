@@ -6,10 +6,14 @@
 package com.dagm.devtool.service.impl;
 
 import com.dagm.devtool.cache.StoreKey;
+import com.dagm.devtool.model.BaseObject;
 import com.dagm.devtool.service.RedisStoreClient;
-import java.util.List;
-import java.util.Map;
+import java.util.Date;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.Resource;
+import org.springframework.data.redis.connection.DataType;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,34 +23,40 @@ import org.springframework.stereotype.Service;
 @Service(value = "redisStoreClient")
 public class RedisStoreClientImpl implements RedisStoreClient {
 
+    @Resource(name = "redisTemplate")
+    private RedisTemplate<String, BaseObject> redisTemplate;
+
     @Override
     public Boolean exists(StoreKey key) {
-        return null;
+        return redisTemplate.hasKey(key.getKey());
     }
 
     @Override
     public String type(StoreKey key) {
-        return null;
+        DataType dataType = redisTemplate.type(key.getKey());
+        return dataType == null ? null : dataType.name();
     }
 
     @Override
     public Long incrBy(StoreKey key, long amount, int expireInSeconds, long defaultValue) {
-        return null;
+        return redisTemplate.opsForValue().increment(key.getKey());
     }
 
     @Override
     public Long incrBy(StoreKey key, long amount, int expireInSeconds) {
-        return null;
+        Long val = redisTemplate.opsForValue().increment(key.getKey(), amount);
+        redisTemplate.expire(key.getKey(), expireInSeconds, TimeUnit.SECONDS);
+        return val;
     }
 
     @Override
     public Long incrBy(StoreKey key, long amount) {
-        return null;
+        return redisTemplate.opsForValue().increment(key.getKey(), amount);
     }
 
     @Override
     public Double incrByFloat(StoreKey key, double amount) {
-        return null;
+        return redisTemplate.opsForValue().increment(key.getKey(), amount);
     }
 
     @Override
@@ -56,93 +66,61 @@ public class RedisStoreClientImpl implements RedisStoreClient {
 
     @Override
     public Long decrBy(StoreKey key, long amount, int expireInSeconds) {
-        return null;
+        Long val = redisTemplate.opsForValue().decrement(key.getKey(), amount);
+        redisTemplate.expire(key.getKey(), expireInSeconds, TimeUnit.SECONDS);
+        return val;
     }
 
     @Override
     public Long decrBy(StoreKey key, long amount) {
-        return null;
+        return redisTemplate.opsForValue().decrement(key.getKey(), amount);
     }
 
     @Override
     public Boolean expire(StoreKey key, int expireInSeconds) {
-        return null;
+        return redisTemplate.expire(key.getKey(), expireInSeconds, TimeUnit.SECONDS);
     }
 
     @Override
     public Boolean expireAt(StoreKey key, long unixTimeInSeconds) {
-        return null;
+        return redisTemplate.expireAt(key.getKey(), new Date(unixTimeInSeconds * 1000));
     }
 
     @Override
     public Boolean pexpire(StoreKey key, long expireInMs) {
-        return null;
+        return redisTemplate.expire(key.getKey(), expireInMs, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public Long ttl(StoreKey key) {
-        return null;
+        return redisTemplate.getExpire(key.getKey());
     }
 
     @Override
     public Long pttl(StoreKey key) {
-        return null;
+        return redisTemplate.getExpire(key.getKey(), TimeUnit.MILLISECONDS);
     }
 
     @Override
     public Boolean persist(StoreKey key) {
-        return null;
+        return redisTemplate.persist(key.getKey());
     }
 
     @Override
-    public Long append(StoreKey key, String value) {
-        return null;
+    public Integer append(StoreKey key, String value) {
+        return redisTemplate.opsForValue().append(key.getKey(), value);
     }
 
     @Override
-    public <T> T getSet(StoreKey key, Object value) {
-        return null;
+    public <T> T getSet(StoreKey key, BaseObject value) {
+        return (T) redisTemplate.opsForValue().getAndSet(key.getKey(), value);
     }
 
     @Override
-    public byte[] getSetBytes(StoreKey key, byte[] value) {
-        return new byte[0];
-    }
-
-    @Override
-    public <T> T getSet(StoreKey key, Object value, int expireInSeconds) {
+    public <T> T getSet(StoreKey key, BaseObject value, int expireInSeconds) {
         return null;
     }
 
-    @Override
-    public Boolean getBit(StoreKey key, long offset) {
-        return null;
-    }
-
-    @Override
-    public Map<Long, Boolean> getBits(StoreKey key, List<Long> offsets) {
-        return null;
-    }
-
-    @Override
-    public Boolean setBit(StoreKey key, long offset, boolean value) {
-        return null;
-    }
-
-    @Override
-    public Map<Long, Boolean> setBits(StoreKey key, Map<Long, Boolean> bitsMap) {
-        return null;
-    }
-
-    @Override
-    public Long bitCount(StoreKey key, long start, long end) {
-        return null;
-    }
-
-    @Override
-    public Long bitCount(StoreKey key) {
-        return null;
-    }
 
     @Override
     public Boolean set(StoreKey key, Object value, int expireInSeconds) {
@@ -193,36 +171,6 @@ public class RedisStoreClientImpl implements RedisStoreClient {
 
     @Override
     public Boolean setxx(StoreKey key, Object value, int expireInSeconds) {
-        return null;
-    }
-
-    @Override
-    public Boolean setnxBytes(StoreKey key, byte[] value, int expireInSeconds) {
-        return null;
-    }
-
-    @Override
-    public Boolean setnxBytes(StoreKey key, byte[] value) {
-        return null;
-    }
-
-    @Override
-    public Boolean setRaw(StoreKey key, String value, int expireInSeconds) {
-        return null;
-    }
-
-    @Override
-    public String getRaw(StoreKey key) {
-        return null;
-    }
-
-    @Override
-    public Boolean setBytes(StoreKey key, byte[] value, int expireInSeconds) {
-        return null;
-    }
-
-    @Override
-    public Boolean setBytes(StoreKey key, byte[] value) {
         return null;
     }
 
