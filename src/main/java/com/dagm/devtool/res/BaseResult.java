@@ -15,8 +15,8 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
- * @author: Guimu
- * @created: 2019/10/07
+ * @author Guimu
+ * @date 2019/10/07
  */
 @Getter
 @Setter
@@ -31,7 +31,8 @@ public class BaseResult<T> {
 
     /**
      * 默认成功的 BaseResult
-     * @return com.dagm.devtool.res.BaseResult<java.lang.String>
+     *
+     * @return com.dagm.devtool.res.BaseResult java.lang.String
      * @author Guimu
      * @date 2020/1/9
      */
@@ -43,7 +44,8 @@ public class BaseResult<T> {
     /**
      * 根据BaseCode 构建对应的BaseResult
      *
-     * @return com.dagm.devtool.res.BaseResult<java.lang.String>
+     * @param baseCode 提示信息
+     * @return com.dagm.devtool.res.BaseResult java.lang.String
      * @author Guimu 提示信息
      * @date 2020/1/9
      */
@@ -56,7 +58,7 @@ public class BaseResult<T> {
      * 根据errorMsg 构建对应的 BaseResult
      *
      * @param errorMsg 错误信息
-     * @return com.dagm.devtool.res.BaseResult<java.lang.String>
+     * @return com.dagm.devtool.res.BaseResult java.lang.String
      * @author Guimu
      * @date 2020/1/9
      */
@@ -68,7 +70,8 @@ public class BaseResult<T> {
     /**
      * 根据data构建对应的 BaseResult
      *
-     * @return com.dagm.devtool.res.BaseResult<T>
+     * @param data 响应成功 的data信息
+     * @return com.dagm.devtool.res.BaseResult T
      * @author Guimu
      * @date 2020/1/9
      */
