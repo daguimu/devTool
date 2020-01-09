@@ -8,7 +8,6 @@ package com.dagm.devtool.serializer;
 import com.dagm.devtool.annotation.SensitiveInfo;
 import com.dagm.devtool.enums.SensitiveTypeEnum;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -35,7 +34,7 @@ public class SensitiveInfoSerialize extends JsonSerializer<Object> implements
 
     @Override
     public void serialize(final Object s, final JsonGenerator jsonGenerator,
-        final SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+        final SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeString(this.type.getDeSensFunction().apply(s));
     }
 

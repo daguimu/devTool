@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 /**
  * 分页参数
  *
- * @author: Guimu
+ * @author Guimu
  */
 @Setter
 @Getter

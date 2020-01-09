@@ -9,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @author: Guimu
+ * @author Guimu
  */
 @AllArgsConstructor
 @Getter

@@ -153,14 +153,14 @@ public class DateTimeUtil {
     }
 
     /**
-     * 将指定时间戳 转换成对应的时间字符串对
+     * 将指定时间戳 转换成对应的时间字符串
      *
-     * @param time 时间对象源数据
+     * @param timeStamp 时间对象源数据
      * @param formatEnum 目标字符串时间的格式
      * @return Date 时间对象
      */
-    public static String timeStampToStr(Long time, DateFormatEnum formatEnum) {
-        return new SimpleDateFormat(formatEnum.getFormat()).format(time);
+    public static String timeStampToStr(Long timeStamp, DateFormatEnum formatEnum) {
+        return new SimpleDateFormat(formatEnum.getFormat()).format(timeStamp);
     }
 
     /**
