@@ -156,9 +156,8 @@ public interface RedisStoreClient {
      * @param key redis key
      * @param value redis value
      * @param expireInSeconds 单位 秒
-     * @return 如果成功，返回 true 如果失败，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
      */
-    Boolean set(StoreKey key, BaseObject value, int expireInSeconds);
+    void set(StoreKey key, BaseObject value, int expireInSeconds);
 
     /**
      * 设置 Key 对应的值为 Value(当且仅当key不存在),并设置过期时间expire(默认不需要这个,category自带过期时间)

@@ -9,11 +9,16 @@ import com.dagm.devtool.cache.StoreKey;
 import com.dagm.devtool.model.BaseObject;
 import com.dagm.devtool.service.RedisStoreClient;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.DataType;
+import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author Guimu
@@ -227,11 +232,10 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      * @param key redis key
      * @param value redis value
      * @param expireInSeconds 单位 秒
-     * @return 如果成功，返回 true 如果失败，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
      */
     @Override
-    public Boolean set(StoreKey key, BaseObject value, int expireInSeconds) {
-        return null;
+    public void set(StoreKey key, BaseObject value, int expireInSeconds) {
+        redisTemplate.opsForValue().set(key.getKey(), value);
     }
 
 
@@ -259,7 +263,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public Boolean setnx(StoreKey key, BaseObject value, int expireInSeconds) {
-        return null;
+        return baseSetnx(key.getKey(), value, expireInSeconds * 1000, false);
     }
 
     /**
@@ -271,7 +275,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public Boolean setxx(StoreKey key, BaseObject value) {
-        return null;
+        return redisTemplate.opsForValue().setIfPresent(key.getKey(), value);
     }
 
 
@@ -285,6 +289,38 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public Boolean setxx(StoreKey key, BaseObject value, int expireInSeconds) {
-        return null;
+        return baseSetnx(key.getKey(), value, expireInSeconds * 1000, true);
+    }
+
+    private boolean baseSetnx(String key, BaseObject value, int expire, boolean exist) {
+        SessionCallback sc = new SessionCallback() {
+            @Override
+            public List<Object> execute(RedisOperations operations) throws DataAccessException {
+                //开始观察key
+                operations.watch(key);
+                //获取key 对应的值
+                boolean flag = null == operations.opsForValue().get(key);
+                List<Object> rs = null;
+                //资源可用
+                if (exist ^ flag) {
+                    //开启事务
+                    operations.multi();
+                    //必要的查询
+                    operations.opsForValue().get(key);
+                    //占用资源
+                    //并设置其值为l timeUnit的过期时间
+                    if (expire == -1) {
+                        operations.opsForValue().set(key, value);
+                    } else {
+                        operations.opsForValue()
+                            .set(key, value, expire, TimeUnit.MILLISECONDS);
+                    }
+                    rs = operations.exec();
+                }
+                return rs;
+            }
+        };
+        Object result = redisTemplate.execute(sc);
+        return !CollectionUtils.isEmpty((List) result);
     }
 }
