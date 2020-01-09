@@ -71,6 +71,7 @@ public class BaseResult<T> {
      * 根据data构建对应的 BaseResult
      *
      * @param data 响应成功 的data信息
+     * @param <T> t
      * @return com.dagm.devtool.res.BaseResult T
      * @author Guimu
      * @date 2020/1/9

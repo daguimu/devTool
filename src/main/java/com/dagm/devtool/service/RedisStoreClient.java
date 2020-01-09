@@ -133,6 +133,7 @@ public interface RedisStoreClient {
      *
      * @param key redis key
      * @param value redis value
+     * @param <T> t
      * @return 返回给定 key 的旧值。当 key 不存在时，返回 null 。
      */
     <T> T getSet(StoreKey key, Object value);
@@ -143,6 +144,7 @@ public interface RedisStoreClient {
      *
      * @param key StoreKey
      * @param value 设置的value
+     * @param <T> t
      * @param expireInSeconds 过期时间
      * @return 旧值
      */
