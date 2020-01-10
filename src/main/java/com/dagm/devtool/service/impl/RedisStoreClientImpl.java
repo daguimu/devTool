@@ -45,7 +45,6 @@ public class RedisStoreClientImpl implements RedisStoreClient {
     /**
      * 根据redis key 获取其value
      *
-     * @return T 返回值
      * @author Guimu
      * @date 2020/1/9
      */
