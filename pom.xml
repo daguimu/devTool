@@ -111,7 +111,7 @@
         </executions>
         <configuration>
           <encoding>UTF-8</encoding>
-          <skip>true</skip>
+<!--          <skip>true</skip>-->
           <tags>
             <tag>
               <name>date</name>
