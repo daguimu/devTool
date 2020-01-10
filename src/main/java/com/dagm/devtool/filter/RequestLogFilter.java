@@ -20,7 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
  * @date 2019/10/11
  */
 @WebFilter(urlPatterns = {"/**"}, filterName = "request-log-filter")
-@Order(5)
+@Order(1)
 @Slf4j
 public class RequestLogFilter extends OncePerRequestFilter {
 
