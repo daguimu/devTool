@@ -10,24 +10,40 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @author: Guimu
- * @created: 2019/10/07
+ * @author Guimu
+ * @date  2019/10/07
  */
 @Getter
 @Setter
-public class CommonException extends RuntimeException{
+public class CommonException extends RuntimeException {
+
     private String code;
     private String message;
 
+    /**
+     * @author Guimu
+     * @date 2020/2/15
+     */
     public CommonException() {
     }
 
+    /**
+     * @param code 异常代码
+     * @param message 异常message
+     * @author Guimu
+     * @date 2020/2/15
+     */
     public CommonException(String code, String message) {
         super("code:" + code + " message:" + message);
         this.code = code;
         this.message = message;
     }
 
+    /**
+     * @param commonCodeEnum 提示错误
+     * @author Guimu
+     * @date 2020/2/15
+     */
     public CommonException(BaseTipCode commonCodeEnum) {
         super("code:" + commonCodeEnum.getCode() + " message:" + commonCodeEnum.getMsg());
         this.code = commonCodeEnum.getCode();

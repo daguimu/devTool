@@ -21,6 +21,7 @@ public interface RedisStoreClient {
      * 根据redis key 获取其value
      *
      * @return T 返回值
+     * @param key redis key
      * @author Guimu
      * @date 2020/1/9
      */
