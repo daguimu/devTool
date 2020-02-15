@@ -6,11 +6,10 @@
 package com.dagm.devtool.utils;
 
 import com.dagm.devtool.common.BaseCode;
-import com.google.common.base.Preconditions;
+import com.dagm.devtool.exceptions.CommonException;
+import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author: Guimu
- */
+@Slf4j
 public class PreconditionsUtil {
 
     /**
@@ -20,7 +19,9 @@ public class PreconditionsUtil {
      * @param code 基础错误码
      */
     public static void checkArgument(boolean expression, BaseCode code) {
-        Preconditions.checkArgument(expression,
-            String.format("[错误码: %s, 错误信息: %s]", code.getCode(), code.getMsg()));
+        if (!expression) {
+            log.info("抛出业务异常,code:[{}],errMsg:[{}]", code.getCode(), code.getMsg());
+            throw new CommonException(code.getCode(), String.valueOf(code.getMsg()));
+        }
     }
 }
