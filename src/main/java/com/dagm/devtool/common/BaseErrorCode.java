@@ -19,9 +19,9 @@ public enum BaseErrorCode implements BaseCode {
      */
     INNER_PARAM_ERROR("9001", "内部参数错误"),
     /**
-     * 外部部参数错误
+     * 参数错误
      */
-    OUTTER_PARAM_ERROR("9002", "外部部参数错误"),
+    PARAM_ERROR("9002", "参数错误"),
     /**
      * 系统内部异常错误
      */

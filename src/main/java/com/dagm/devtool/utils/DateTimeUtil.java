@@ -5,7 +5,7 @@
  */
 package com.dagm.devtool.utils;
 
-import static com.dagm.devtool.common.BaseErrorCode.OUTTER_PARAM_ERROR;
+import static com.dagm.devtool.common.BaseErrorCode.PARAM_ERROR;
 
 import com.dagm.devtool.enums.DateFormatEnum;
 import java.text.SimpleDateFormat;
@@ -59,7 +59,7 @@ public class DateTimeUtil {
      * @return LocalDateTime
      */
     public static LocalDateTime strToLocalDateTime(String timeStr, DateFormatEnum formatEnum) {
-        PreconditionsUtil.checkArgument(checkDateFormat(timeStr, formatEnum), OUTTER_PARAM_ERROR);
+        PreconditionsUtil.checkArgument(checkDateFormat(timeStr, formatEnum), PARAM_ERROR);
         DateTimeFormatter df = DateTimeFormatter.ofPattern(formatEnum.getFormat());
         return LocalDateTime.parse(timeStr, df);
     }
