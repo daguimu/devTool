@@ -8,23 +8,32 @@ package com.dagm.devtool.service.impl;
 import com.dagm.devtool.cache.StoreKey;
 import com.dagm.devtool.service.RedisStoreClient;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
-import org.springframework.dao.DataAccessException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.DataType;
-import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SessionCallback;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.scripting.support.StaticScriptSource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 /**
  * @author Guimu
  * @date 2020/01/09
  */
 @Service(value = "redisStoreClient")
+@Slf4j
 public class RedisStoreClientImpl implements RedisStoreClient {
+
+
+    /**
+     * 定义getset expire script
+     */
+    private static final String GET_SET_SCRIPT =
+        "local oldVal = redis.call('getset',KEYS[1],ARGV[1])\n"
+            + "return redis.call('expire',KEYS[1],ARGV[2])";
 
     @Resource(name = "redisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
@@ -226,7 +235,18 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public <T> T getSet(StoreKey key, Object value, int expireInSeconds) {
-        return null;
+        try {
+            DefaultRedisScript<Object> script = new DefaultRedisScript<>();
+            script.setResultType(Object.class);
+            script.setScriptSource(new StaticScriptSource(GET_SET_SCRIPT));
+            List<String> keys = new LinkedList<>();
+            keys.add(key.getKey());
+            return (T) redisTemplate
+                .execute(script, keys, value, expireInSeconds);
+        } catch (Exception e) {
+            log.error("redis getSet  failed", e);
+            return null;
+        }
     }
 
     /**
@@ -238,23 +258,8 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public void set(StoreKey key, Object value, int expireInSeconds) {
-        redisTemplate.opsForValue().set(key.getKey(), value);
+        redisTemplate.opsForValue().set(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
     }
-
-
-    /**
-     * 设置 Key 对应的值为 Value(当且仅当key不存在),并设置过期时间expire(默认不需要这个,category自带过期时间)
-     *
-     * @param key redis key
-     * @param value redis value
-     * @param expireInSeconds 单位 秒
-     * @return 如果成功，返回 true 如果失败，返回 false
-     */
-    @Override
-    public Boolean add(StoreKey key, Object value, int expireInSeconds) {
-        return null;
-    }
-
 
     /**
      * 添加 Key 对应的值为 Value，只有当 Key 不存在时才添加，如果 Key 已经存在，不改变现有的值
@@ -266,7 +271,8 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public Boolean setnx(StoreKey key, Object value, int expireInSeconds) {
-        return baseSetnx(key.getKey(), value, expireInSeconds * 1000, false);
+        return redisTemplate.opsForValue()
+            .setIfAbsent(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
     }
 
     /**
@@ -292,38 +298,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public Boolean setxx(StoreKey key, Object value, int expireInSeconds) {
-        return baseSetnx(key.getKey(), value, expireInSeconds * 1000, true);
-    }
-
-    private boolean baseSetnx(String key, Object value, int expire, boolean exist) {
-        SessionCallback sc = new SessionCallback() {
-            @Override
-            public List<Object> execute(RedisOperations operations) throws DataAccessException {
-                //开始观察key
-                operations.watch(key);
-                //获取key 对应的值
-                boolean flag = null == operations.opsForValue().get(key);
-                List<Object> rs = null;
-                //资源可用
-                if (exist ^ flag) {
-                    //开启事务
-                    operations.multi();
-                    //必要的查询
-                    operations.opsForValue().get(key);
-                    //占用资源
-                    //并设置其值为l timeUnit的过期时间
-                    if (expire == -1) {
-                        operations.opsForValue().set(key, value);
-                    } else {
-                        operations.opsForValue()
-                            .set(key, value, expire, TimeUnit.MILLISECONDS);
-                    }
-                    rs = operations.exec();
-                }
-                return rs;
-            }
-        };
-        Object result = redisTemplate.execute(sc);
-        return !CollectionUtils.isEmpty((List) result);
+        return redisTemplate.opsForValue()
+            .setIfPresent(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
     }
 }

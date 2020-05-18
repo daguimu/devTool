@@ -170,16 +170,6 @@ public interface RedisStoreClient {
     void set(StoreKey key, Object value, int expireInSeconds);
 
     /**
-     * 设置 Key 对应的值为 Value(当且仅当key不存在),并设置过期时间expire(默认不需要这个,category自带过期时间)
-     *
-     * @param key redis key
-     * @param value redis value
-     * @param expireInSeconds 单位 秒
-     * @return 如果成功，返回 true 如果失败，返回 false
-     */
-    Boolean add(StoreKey key, Object value, int expireInSeconds);
-
-    /**
      * 添加 Key 对应的值为 Value，只有当 Key 不存在时才添加，如果 Key 已经存在，不改变现有的值
      *
      * @param key 要添加的  Key
