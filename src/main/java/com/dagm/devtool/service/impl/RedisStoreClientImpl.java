@@ -97,6 +97,11 @@ public class RedisStoreClientImpl implements RedisStoreClient {
         return val;
     }
 
+    @Override
+    public Boolean delete(StoreKey key) {
+        return redisTemplate.delete(key.getKey());
+    }
+
 
     /**
      * 自增函数, 默认过期时间为category上配置的过期时间

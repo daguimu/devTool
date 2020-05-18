@@ -20,8 +20,8 @@ public interface RedisStoreClient {
     /**
      * 根据redis key 获取其value
      *
-     * @return T 返回值
      * @param key redis key
+     * @return T 返回值
      * @author Guimu
      * @date 2020/1/9
      */
@@ -58,6 +58,14 @@ public interface RedisStoreClient {
      * @return 增长后 key 的值,如果 Key 不存在，会创建这个 Key : 值=amount ,过期时间为 expireInSeconds
      */
     Long incrBy(StoreKey key, long amount, int expireInSeconds);
+
+    /**
+     * 删除指定 Key
+     *
+     * @param key 要删除的 Key
+     * @return 如果 Key 存在且被删除，返回 true<br> 如果 Key 不存在，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
+     */
+    public Boolean delete(StoreKey key);
 
     /**
      * 自增函数, 默认过期时间为category上配置的过期时间
