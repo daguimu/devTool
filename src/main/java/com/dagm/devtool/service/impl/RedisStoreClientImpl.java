@@ -18,6 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.support.StaticScriptSource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author Guimu
@@ -41,20 +42,22 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     private static final String INCRBY_SCRIPT =
         "local oldVal = redis.call('INCRBY',KEYS[1],ARGV[1])\n"
-            + "return redis.call('expire',KEYS[1],ARGV[2])";
+            + "redis.call('expire',KEYS[1],ARGV[2]) return oldVal";
+
 
     /**
      * 初始化自增key 并设置过期时间及默认值
      */
     private static final String INCRBY_SCRIPT_DEFAULT =
         "local val = nil\n"
-            + "if redis.call(\"EXISTS\",KEYS[1]) == 1 then\n"
-            + "val = redis.call(\"INCRBY\",KEYS[1],ARGV[1])\n"
+            + "if redis.call('EXISTS',KEYS[1]) == 1 then\n"
+            + "val = redis.call('INCRBY',KEYS[1],ARGV[1])\n"
             + "redis.call('expire',KEYS[1],ARGV[2])\n"
             + "return val\n"
             + "else\n"
-            + "redis.call(\"set\",KEYS[1],ARGV[3],ARGV[2])\n"
-            + "return ARGV[3]\n"
+            + "redis.call('set',KEYS[1], ARGV[3])\n"
+            + "redis.call('expire',KEYS[1],ARGV[2])\n"
+            + "return tonumber(ARGV[3])\n"
             + "end";
 
 
@@ -278,18 +281,19 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public <T> T getSet(StoreKey key, Object value, int expireInSeconds) {
+        List<T> result;
         try {
             DefaultRedisScript<Object> script = new DefaultRedisScript<>();
             script.setResultType(Object.class);
             script.setScriptSource(new StaticScriptSource(GET_SET_SCRIPT));
             List<String> keys = new LinkedList<>();
             keys.add(key.getKey());
-            return (T) redisTemplate
-                .execute(script, keys, value, expireInSeconds);
+            result = (List<T>) redisTemplate.execute(script, keys, value, expireInSeconds);
         } catch (Exception e) {
             log.error("redis getSet  failed", e);
             return null;
         }
+        return CollectionUtils.isEmpty(result) ? null : result.get(0);
     }
 
     /**
