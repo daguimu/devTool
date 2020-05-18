@@ -33,7 +33,30 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     private static final String GET_SET_SCRIPT =
         "local oldVal = redis.call('getset',KEYS[1],ARGV[1])\n"
+            + "redis.call('expire',KEYS[1],ARGV[2])\n"
+            + "return oldVal";
+
+    /**
+     * 初始化自增key 并设置过期时间
+     */
+    private static final String INCRBY_SCRIPT =
+        "local oldVal = redis.call('INCRBY',KEYS[1],ARGV[1])\n"
             + "return redis.call('expire',KEYS[1],ARGV[2])";
+
+    /**
+     * 初始化自增key 并设置过期时间及默认值
+     */
+    private static final String INCRBY_SCRIPT_DEFAULT =
+        "local val = nil\n"
+            + "if redis.call(\"EXISTS\",KEYS[1]) == 1 then\n"
+            + "val = redis.call(\"INCRBY\",KEYS[1],ARGV[1])\n"
+            + "redis.call('expire',KEYS[1],ARGV[2])\n"
+            + "return val\n"
+            + "else\n"
+            + "redis.call(\"set\",KEYS[1],ARGV[3],ARGV[2])\n"
+            + "return ARGV[3]\n"
+            + "end";
+
 
     @Resource(name = "redisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
@@ -88,7 +111,18 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public Long incrBy(StoreKey key, long amount, int expireInSeconds, long defaultValue) {
-        return redisTemplate.opsForValue().increment(key.getKey());
+        try {
+            DefaultRedisScript<Long> script = new DefaultRedisScript<>();
+            script.setResultType(Long.class);
+            script.setScriptSource(new StaticScriptSource(INCRBY_SCRIPT_DEFAULT));
+            List<String> keys = new LinkedList<>();
+            keys.add(key.getKey());
+            return redisTemplate
+                .execute(script, keys, amount, expireInSeconds, defaultValue);
+        } catch (Exception e) {
+            log.error("redis incrBy with default  failed", e);
+            return null;
+        }
     }
 
     /**
@@ -101,9 +135,18 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public Long incrBy(StoreKey key, long amount, int expireInSeconds) {
-        Long val = redisTemplate.opsForValue().increment(key.getKey(), amount);
-        redisTemplate.expire(key.getKey(), expireInSeconds, TimeUnit.SECONDS);
-        return val;
+        try {
+            DefaultRedisScript<Long> script = new DefaultRedisScript<>();
+            script.setResultType(Long.class);
+            script.setScriptSource(new StaticScriptSource(INCRBY_SCRIPT));
+            List<String> keys = new LinkedList<>();
+            keys.add(key.getKey());
+            return redisTemplate
+                .execute(script, keys, amount, expireInSeconds);
+        } catch (Exception e) {
+            log.error("redis incrBy  failed", e);
+            return null;
+        }
     }
 
     @Override
@@ -258,7 +301,11 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public void set(StoreKey key, Object value, int expireInSeconds) {
-        redisTemplate.opsForValue().set(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
+        if (expireInSeconds < 0) {
+            redisTemplate.opsForValue().set(key.getKey(), value);
+        } else {
+            redisTemplate.opsForValue().set(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
+        }
     }
 
     /**
@@ -271,8 +318,13 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public Boolean setnx(StoreKey key, Object value, int expireInSeconds) {
-        return redisTemplate.opsForValue()
-            .setIfAbsent(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
+        if (expireInSeconds < 0) {
+            return redisTemplate.opsForValue()
+                .setIfAbsent(key.getKey(), value);
+        } else {
+            return redisTemplate.opsForValue()
+                .setIfAbsent(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
+        }
     }
 
     /**
@@ -298,7 +350,12 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     @Override
     public Boolean setxx(StoreKey key, Object value, int expireInSeconds) {
-        return redisTemplate.opsForValue()
-            .setIfPresent(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
+        if (expireInSeconds < 0) {
+            return redisTemplate.opsForValue()
+                .setIfPresent(key.getKey(), value);
+        } else {
+            return redisTemplate.opsForValue()
+                .setIfPresent(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
+        }
     }
 }
