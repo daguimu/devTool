@@ -11,7 +11,7 @@
   </parent>
   <groupId>com.dagm</groupId>
   <artifactId>dev-tool</artifactId>
-  <version>0.0.6-RELEASE</version>
+  <version>0.0.9-RELEASE</version>
   <name>dev-tool</name>
   <description>tool one of dev</description>
 
