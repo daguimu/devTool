@@ -4,6 +4,7 @@ import com.dagm.devtool.advice.GlobalDefultExceptionHandler;
 import com.dagm.devtool.filter.RequestLogFilter;
 import com.dagm.devtool.interceptor.InnerInterceptor;
 import com.dagm.devtool.serializer.FastJson2JsonRedisSerializer;
+import com.dagm.devtool.service.impl.EsStoreClientImpl;
 import com.dagm.devtool.service.impl.RedisStoreClientImpl;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -25,12 +26,15 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
     RedisStoreClientImpl.class,
     GlobalDefultExceptionHandler.class,
     InnerInterceptor.class,
-    RequestLogFilter.class
+    RequestLogFilter.class,
+    ElasticSearchConfig.class,
+    EsStoreClientImpl.class
+
 })
-@ConditionalOnProperty(name = "spring.redis.enable")
 public class Config extends CachingConfigurerSupport {
 
     @Bean(name = "redisTemplate")
+    @ConditionalOnProperty(name = "spring.redis.enable", havingValue = "true")
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);

@@ -28,6 +28,7 @@ public class GlobalDefultExceptionHandler {
      * 声明要捕获的异常
      *
      * @param request : req
+     * @param e: e
      * @return com.dagm.devtool.res.BaseResult java.lang.String
      * @author Guimu
      * @date 2020/4/10

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -26,6 +27,7 @@ import org.springframework.util.CollectionUtils;
  */
 @Service(value = "redisStoreClient")
 @Slf4j
+@ConditionalOnProperty(name = "spring.redis.enable", havingValue = "true")
 public class RedisStoreClientImpl implements RedisStoreClient {
 
 
