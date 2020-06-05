@@ -4,7 +4,7 @@ import com.dagm.devtool.advice.GlobalDefultExceptionHandler;
 import com.dagm.devtool.filter.RequestLogFilter;
 import com.dagm.devtool.interceptor.InnerInterceptor;
 import com.dagm.devtool.serializer.FastJson2JsonRedisSerializer;
-import com.dagm.devtool.service.impl.EsStoreClientImpl;
+import com.dagm.devtool.service.impl.ElasticSearchStoreClientImpl;
 import com.dagm.devtool.service.impl.RedisStoreClientImpl;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
@@ -28,7 +28,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
     InnerInterceptor.class,
     RequestLogFilter.class,
     ElasticSearchConfig.class,
-    EsStoreClientImpl.class
+    ElasticSearchStoreClientImpl.class
 
 })
 public class Config extends CachingConfigurerSupport {

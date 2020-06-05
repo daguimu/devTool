@@ -16,7 +16,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
  * @author Guimu
  * @date 2020/06/05
  */
-public interface EsStoreClient {
+public interface ElasticSearchStoreClient {
 
     /**
      * 添加或更新数据到ES

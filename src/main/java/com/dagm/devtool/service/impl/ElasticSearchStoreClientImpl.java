@@ -6,7 +6,7 @@
 package com.dagm.devtool.service.impl;
 
 import com.dagm.devtool.config.ElasticSearchConfig;
-import com.dagm.devtool.service.EsStoreClient;
+import com.dagm.devtool.service.ElasticSearchStoreClient;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @ConditionalOnBean(ElasticSearchConfig.class)
-public class EsStoreClientImpl implements EsStoreClient {
+public class ElasticSearchStoreClientImpl implements ElasticSearchStoreClient {
 
     @Resource
     private BulkProcessor bulkProcessor;
