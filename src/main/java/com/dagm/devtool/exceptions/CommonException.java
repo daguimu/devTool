@@ -5,7 +5,7 @@
  */
 package com.dagm.devtool.exceptions;
 
-import com.dagm.devtool.common.BaseTipCode;
+import com.dagm.devtool.common.BaseCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -44,7 +44,7 @@ public class CommonException extends RuntimeException {
      * @author Guimu
      * @date 2020/2/15
      */
-    public CommonException(BaseTipCode commonCodeEnum) {
+    public CommonException(BaseCode commonCodeEnum) {
         super("code:" + commonCodeEnum.getCode() + " message:" + commonCodeEnum.getMsg());
         this.code = commonCodeEnum.getCode();
         this.message = commonCodeEnum.getMsg();
