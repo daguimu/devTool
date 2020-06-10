@@ -9,6 +9,7 @@ import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
 import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
 import com.alibaba.rocketmq.client.exception.MQClientException;
 import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
+import com.dagm.devtool.config.MqConsumerConfig;
 import com.dagm.devtool.enums.RocketMqTipEnum;
 import com.dagm.devtool.exceptions.CommonException;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * @author Guimu
- * @date  2019/12/10
+ * @date 2019/12/10
  */
 @Getter
 @Setter
@@ -27,10 +28,12 @@ public class BaseMqPushConsumer extends DefaultMQPushConsumer {
 
     private String topic;
 
+    private MqConsumerConfig mqConsumerConfig;
+
+
     @Override
     public void start() throws MQClientException {
-        this.check();
-
+        this.checkAndInit();
         /*
          * 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
          * 如果非第一次启动，那么按照上次消费的位置继续消费
@@ -55,15 +58,24 @@ public class BaseMqPushConsumer extends DefaultMQPushConsumer {
             this.getTopic(), this.getNamesrvAddr());
     }
 
-    private void check() {
+    private void checkAndInit() {
         if (StringUtils.isEmpty(this.getConsumerGroup())) {
             throw new CommonException(RocketMqTipEnum.GROUP_NAME_IS_BLANK);
         }
-        if (StringUtils.isEmpty(this.getNamesrvAddr())) {
+        if (StringUtils.isEmpty(mqConsumerConfig.getNamesrvAddr())) {
             throw new CommonException(RocketMqTipEnum.NAME_ADDR_IS_BLANK);
         }
         if (StringUtils.isEmpty(this.getTopic())) {
             throw new CommonException(RocketMqTipEnum.TOPICS_IS_NULL);
         }
+        this.init();
+
+    }
+
+    private void init() {
+        this.setConsumeThreadMax(mqConsumerConfig.getConsumeThreadMax());
+        this.setConsumeThreadMin(mqConsumerConfig.getConsumeThreadMin());
+        this.setConsumeMessageBatchMaxSize(mqConsumerConfig.getConsumeMessageBatchMaxSize());
+        this.setNamesrvAddr(mqConsumerConfig.getNamesrvAddr());
     }
 }

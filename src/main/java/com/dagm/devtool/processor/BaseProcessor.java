@@ -63,5 +63,5 @@ public abstract class BaseProcessor<T> implements MessageListenerConcurrently {
      * @author Guimu
      * @date 2020/6/10
      */
-    abstract void consume(T msg);
+    public abstract void consume(T msg);
 }
