@@ -24,6 +24,7 @@ public interface ElasticSearchStoreClient {
      * @param map : 数据map
      * @param index : 索引
      * @param type : 类型
+     * @param id : 数据id
      * @author Guimu
      * @date 2020/6/9
      */
@@ -56,6 +57,7 @@ public interface ElasticSearchStoreClient {
      * @param index : 索引
      * @param type : 类型
      * @param idList id 集合
+     * @throws java.io.IOException io 异常
      * @author Guimu
      * @date 2019-09-04
      */
@@ -65,6 +67,7 @@ public interface ElasticSearchStoreClient {
      * @param index : 索引
      * @param docType : 类型
      * @param searchRequestBuilder builder
+     * @throws java.io.IOException io 异常
      * @author Guimu
      * @date 2020/6/9
      */
@@ -74,7 +77,9 @@ public interface ElasticSearchStoreClient {
     /**
      * @param index : 索引
      * @param docType : 类型
+     * @param searchType : 搜索类型
      * @param searchRequestBuilder : builder
+     * @throws java.io.IOException io 异常
      * @author Guimu
      * @date 2020/6/9
      */
