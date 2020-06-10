@@ -17,8 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 /**
- * @author: Guimu
- * @created: 2019/12/10
+ * @author Guimu
+ * @date  2019/12/10
  */
 @Getter
 @Setter

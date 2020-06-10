@@ -29,7 +29,6 @@ public interface RedisStoreClient {
 
     /**
      * 返回该key的类型
-     *
      * @param key redis key
      * @return java.lang.String
      * @author Guimu
