@@ -7,6 +7,7 @@ package com.dagm.devtool.service.impl;
 
 
 import com.dagm.devtool.cache.StoreKey;
+import com.dagm.devtool.model.BaseObject;
 import com.dagm.devtool.service.RedisStoreClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -56,7 +57,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
 
 
     @Resource(name = "redisTemplate")
-    private RedisTemplate<String, Object
+    private RedisTemplate<String, BaseObject
             > redisTemplate;
 
     /**
@@ -260,7 +261,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      * @return 返回给定 key 的旧值。当 key 不存在时，返回 null 。
      */
     @Override
-    public <T> T getSet(StoreKey key, Object
+    public <T> T getSet(StoreKey key, BaseObject
             value) {
         return (T) redisTemplate.opsForValue().getAndSet(key.getKey(), value);
     }
@@ -274,12 +275,11 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      * @return 旧值
      */
     @Override
-    public <T> T getSet(StoreKey key, Object
-            value, int expireInSeconds) {
+    public <T> T getSet(StoreKey key, BaseObject value, int expireInSeconds) {
         List<T> result;
         try {
-            DefaultRedisScript<Object> script = new DefaultRedisScript<>();
-            script.setResultType(Object.class);
+            DefaultRedisScript<BaseObject> script = new DefaultRedisScript<>();
+            script.setResultType(BaseObject.class);
             script.setScriptSource(new StaticScriptSource(GET_SET_SCRIPT));
             List<String> keys = new LinkedList<>();
             keys.add(key.getKey());
@@ -299,7 +299,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      * @param expireInSeconds 单位 秒
      */
     @Override
-    public void set(StoreKey key, Object
+    public void set(StoreKey key, BaseObject
             value, int expireInSeconds) {
         if (expireInSeconds < 0) {
             redisTemplate.opsForValue().set(key.getKey(), value);
@@ -317,8 +317,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      * @return 如果 Key 不存在且添加成功，返回 true 如果 Key 已经存在，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
      */
     @Override
-    public Boolean setnx(StoreKey key, Object
-            value, int expireInSeconds) {
+    public Boolean setnx(StoreKey key, BaseObject value, int expireInSeconds) {
         if (expireInSeconds < 0) {
             return redisTemplate.opsForValue()
                     .setIfAbsent(key.getKey(), value);
@@ -336,8 +335,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      * @return 如果 Key 存在且添加成功，返回 true 如果操作失败，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
      */
     @Override
-    public Boolean setxx(StoreKey key, Object
-            value) {
+    public Boolean setxx(StoreKey key, BaseObject value) {
         return redisTemplate.opsForValue().setIfPresent(key.getKey(), value);
     }
 
@@ -351,8 +349,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      * @return 如果 Key 存在且添加成功，返回 true 如果操作失败，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
      */
     @Override
-    public Boolean setxx(StoreKey key, Object
-            value, int expireInSeconds) {
+    public Boolean setxx(StoreKey key, BaseObject value, int expireInSeconds) {
         if (expireInSeconds < 0) {
             return redisTemplate.opsForValue()
                     .setIfPresent(key.getKey(), value);
