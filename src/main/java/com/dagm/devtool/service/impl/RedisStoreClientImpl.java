@@ -6,12 +6,8 @@
 package com.dagm.devtool.service.impl;
 
 import com.dagm.devtool.cache.StoreKey;
+import com.dagm.devtool.model.BaseObject;
 import com.dagm.devtool.service.RedisStoreClient;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import javax.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.redis.connection.DataType;
@@ -20,6 +16,12 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.support.StaticScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Guimu
@@ -35,36 +37,26 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      * 定义getset expire script
      */
     private static final String GET_SET_SCRIPT =
-        "local oldVal = redis.call('getset',KEYS[1],ARGV[1])\n"
-            + "redis.call('expire',KEYS[1],ARGV[2])\n"
-            + "return oldVal";
+            "local oldVal = redis.call('getset',KEYS[1],ARGV[1])\n"
+                    + "redis.call('expire',KEYS[1],ARGV[2])\n"
+                    + "return oldVal";
 
     /**
      * 初始化自增key 并设置过期时间
      */
-    private static final String INCRBY_SCRIPT =
-        "local oldVal = redis.call('INCRBY',KEYS[1],ARGV[1])\n"
-            + "redis.call('expire',KEYS[1],ARGV[2]) return oldVal";
+    private static final String INCR_SCRIPT =
+            "local val = redis.call('INCR',KEYS[1])\n"
+                    + "redis.call('expire',KEYS[1],ARGV[1]) return val";
 
 
     /**
      * 初始化自增key 并设置过期时间及默认值
      */
-    private static final String INCRBY_SCRIPT_DEFAULT =
-        "local val = nil\n"
-            + "if redis.call('EXISTS',KEYS[1]) == 1 then\n"
-            + "val = redis.call('INCRBY',KEYS[1],ARGV[1])\n"
-            + "redis.call('expire',KEYS[1],ARGV[2])\n"
-            + "return val\n"
-            + "else\n"
-            + "redis.call('set',KEYS[1], ARGV[3])\n"
-            + "redis.call('expire',KEYS[1],ARGV[2])\n"
-            + "return tonumber(ARGV[3])\n"
-            + "end";
+    private static final String INCR_SCRIPT_DEFAULT = "local val = nil if redis.call('EXISTS',KEYS[1]) == 1 then val = redis.call('INCR',KEYS[1]) redis.call('expire',KEYS[1],ARGV[1]) return val else  redis.call('set',KEYS[1], ARGV[2]) redis.call('expire',KEYS[1],ARGV[1]) return tonumber(ARGV[2]) end";
 
 
     @Resource(name = "redisTemplate")
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate<String, BaseObject> redisTemplate;
 
     /**
      * 判断是否存在某key
@@ -108,22 +100,21 @@ public class RedisStoreClientImpl implements RedisStoreClient {
     /**
      * 带有过期时间的incr操作
      *
-     * @param amount 要增加的值
-     * @param key redis key
+     * @param key             redis key
      * @param expireInSeconds 初始化 key 的过期时间
-     * @param defaultValue 初始化 key 的默认值
+     * @param defaultValue    初始化 key 的默认值
      * @return 增长后 key 的值,如果 Key 不存在，会创建这个 Key，且值为 defaultValue,然后再增加amount, 过期时间为 defaultExpire
      */
     @Override
-    public Long incrBy(StoreKey key, long amount, int expireInSeconds, long defaultValue) {
+    public Long incr(StoreKey key, int expireInSeconds, long defaultValue) {
         try {
             DefaultRedisScript<Long> script = new DefaultRedisScript<>();
             script.setResultType(Long.class);
-            script.setScriptSource(new StaticScriptSource(INCRBY_SCRIPT_DEFAULT));
+            script.setScriptSource(new StaticScriptSource(INCR_SCRIPT_DEFAULT));
             List<String> keys = new LinkedList<>();
             keys.add(key.getKey());
             return redisTemplate
-                .execute(script, keys, amount, expireInSeconds, defaultValue);
+                    .execute(script, keys, expireInSeconds, defaultValue);
         } catch (Exception e) {
             log.error("redis incrBy with default  failed", e);
             return null;
@@ -133,21 +124,20 @@ public class RedisStoreClientImpl implements RedisStoreClient {
     /**
      * 带有过期时间的incr操作
      *
-     * @param amount 要增加的值
-     * @param key redis key
+     * @param key             redis key
      * @param expireInSeconds 初始化 key 的过期时间
      * @return 增长后 key 的值,如果 Key 不存在，会创建这个 Key : 值=amount ,过期时间为 expireInSeconds
      */
     @Override
-    public Long incrBy(StoreKey key, long amount, int expireInSeconds) {
+    public Long incr(StoreKey key, int expireInSeconds) {
         try {
             DefaultRedisScript<Long> script = new DefaultRedisScript<>();
             script.setResultType(Long.class);
-            script.setScriptSource(new StaticScriptSource(INCRBY_SCRIPT));
+            script.setScriptSource(new StaticScriptSource(INCR_SCRIPT));
             List<String> keys = new LinkedList<>();
             keys.add(key.getKey());
             return redisTemplate
-                .execute(script, keys, amount, expireInSeconds);
+                    .execute(script, keys, expireInSeconds);
         } catch (Exception e) {
             log.error("redis incrBy  failed", e);
             return null;
@@ -164,7 +154,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      * 自增函数, 默认过期时间为category上配置的过期时间
      *
      * @param amount 要增加的值
-     * @param key redis key
+     * @param key    redis key
      * @return 增长后 key 的值,如果 Key 不存在，会创建这个 Key : 值=amount，返回值 amount,过期时间为category 的配置时间
      */
     @Override
@@ -174,7 +164,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
 
     /**
      * @param amount 要增加的值
-     * @param key redis key
+     * @param key    redis key
      * @return 增长后 key 的值,如果 Key 不存在，会创建这个 Key，且值为0，然后再增加, 注意:该值无过期时间
      */
     @Override
@@ -185,7 +175,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
 
     /**
      * @param expireInSeconds 超时时间 , 如果过期时间小于等于 0 ,该key直接过期
-     * @param key redis key
+     * @param key             redis key
      * @return 设置成功返回true，当key不存在或者不能为key设置生存时间时返回false
      */
     @Override
@@ -194,7 +184,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
     }
 
     /**
-     * @param key redis key
+     * @param key               redis key
      * @param unixTimeInSeconds Unix时间戳，代表key要过期的绝对时间
      * @return 设置成功返回true，当key不存在或者不能为key设置生存时间时返回false
      */
@@ -204,7 +194,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
     }
 
     /**
-     * @param key redis key
+     * @param key        redis key
      * @param expireInMs 超时时间,单位——毫秒 , 如果过期时间小于等于 0 ,该key直接过期
      * @return 设置成功返回true，当key不存在或者不能为key设置生存时间时返回false
      */
@@ -249,7 +239,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      * value ，就像执行 SET key value 一样。 需要注意的一点：  append 的是不加任何前缀的value （其他的API
      * 客户端都默认添加一些前缀来做序列化以及压缩判断）， 所以获取的时候必须用  getBytes 获取，如果要转成String ，使用 UTF8
      *
-     * @param key redis key
+     * @param key   redis key
      * @param value redis value
      * @return 追加 value 之后， key 中字符串的长度。
      */
@@ -261,28 +251,28 @@ public class RedisStoreClientImpl implements RedisStoreClient {
 
     /**
      * 将给定 key 的值设为 value ，并返回 key 的旧值(old value)。 当 key 存在但不是字符串类型时，返回一个错误。
-     *
+     * <p>
      * 注意：此命令设置的value没有过期时间，如需过期，需单独设置过期时间
      *
-     * @param key redis key
+     * @param key   redis key
      * @param value redis value
      * @return 返回给定 key 的旧值。当 key 不存在时，返回 null 。
      */
     @Override
-    public <T> T getSet(StoreKey key, Object value) {
+    public <T> T getSet(StoreKey key, BaseObject value) {
         return (T) redisTemplate.opsForValue().getAndSet(key.getKey(), value);
     }
 
     /**
      * 可设置过期时间(lua 实现的原子命令).
      *
-     * @param key StoreKey
-     * @param value 设置的value
+     * @param key             StoreKey
+     * @param value           设置的value
      * @param expireInSeconds 过期时间
      * @return 旧值
      */
     @Override
-    public <T> T getSet(StoreKey key, Object value, int expireInSeconds) {
+    public <T> T getSet(StoreKey key, BaseObject value, int expireInSeconds) {
         List<T> result;
         try {
             DefaultRedisScript<Object> script = new DefaultRedisScript<>();
@@ -301,12 +291,12 @@ public class RedisStoreClientImpl implements RedisStoreClient {
     /**
      * 设置 Key 对应的值为 Value，并设置过期时间expire(默认不需要这个,category自带过期时间), 如果 Key 不存在则添加，如果 Key 已经存在则覆盖
      *
-     * @param key redis key
-     * @param value redis value
+     * @param key             redis key
+     * @param value           redis value
      * @param expireInSeconds 单位 秒
      */
     @Override
-    public void set(StoreKey key, Object value, int expireInSeconds) {
+    public void set(StoreKey key, BaseObject value, int expireInSeconds) {
         if (expireInSeconds < 0) {
             redisTemplate.opsForValue().set(key.getKey(), value);
         } else {
@@ -317,31 +307,31 @@ public class RedisStoreClientImpl implements RedisStoreClient {
     /**
      * 添加 Key 对应的值为 Value，只有当 Key 不存在时才添加，如果 Key 已经存在，不改变现有的值
      *
-     * @param key 要添加的  Key
-     * @param value 要添加的 Value
+     * @param key             要添加的  Key
+     * @param value           要添加的 Value
      * @param expireInSeconds 过期时间
      * @return 如果 Key 不存在且添加成功，返回 true 如果 Key 已经存在，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
      */
     @Override
-    public Boolean setnx(StoreKey key, Object value, int expireInSeconds) {
+    public Boolean setnx(StoreKey key, BaseObject value, int expireInSeconds) {
         if (expireInSeconds < 0) {
             return redisTemplate.opsForValue()
-                .setIfAbsent(key.getKey(), value);
+                    .setIfAbsent(key.getKey(), value);
         } else {
             return redisTemplate.opsForValue()
-                .setIfAbsent(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
+                    .setIfAbsent(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
         }
     }
 
     /**
      * 添加 Key 对应的值为 Value，只有当 Key 存在时才添加，如果 Key 不存在，则不会进行操作。默认使用Category配置的过期时间
      *
-     * @param key 要添加的  Key
+     * @param key   要添加的  Key
      * @param value 要添加的 Value
      * @return 如果 Key 存在且添加成功，返回 true 如果操作失败，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
      */
     @Override
-    public Boolean setxx(StoreKey key, Object value) {
+    public Boolean setxx(StoreKey key, BaseObject value) {
         return redisTemplate.opsForValue().setIfPresent(key.getKey(), value);
     }
 
@@ -349,19 +339,19 @@ public class RedisStoreClientImpl implements RedisStoreClient {
     /**
      * 添加 Key 对应的值为 Value，只有当 Key 存在时才添加，如果 Key 不存在，则不会进行操作
      *
-     * @param key 要添加的  Key
-     * @param value 要添加的 Value
+     * @param key             要添加的  Key
+     * @param value           要添加的 Value
      * @param expireInSeconds 过期时间
      * @return 如果 Key 存在且添加成功，返回 true 如果操作失败，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
      */
     @Override
-    public Boolean setxx(StoreKey key, Object value, int expireInSeconds) {
+    public Boolean setxx(StoreKey key, BaseObject value, int expireInSeconds) {
         if (expireInSeconds < 0) {
             return redisTemplate.opsForValue()
-                .setIfPresent(key.getKey(), value);
+                    .setIfPresent(key.getKey(), value);
         } else {
             return redisTemplate.opsForValue()
-                .setIfPresent(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
+                    .setIfPresent(key.getKey(), value, expireInSeconds, TimeUnit.SECONDS);
         }
     }
 }

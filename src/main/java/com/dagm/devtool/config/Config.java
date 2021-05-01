@@ -3,12 +3,10 @@ package com.dagm.devtool.config;
 import com.dagm.devtool.advice.GlobalDefultExceptionHandler;
 import com.dagm.devtool.filter.RequestLogFilter;
 import com.dagm.devtool.interceptor.InnerInterceptor;
-import com.dagm.devtool.serializer.FastJson2JsonRedisSerializer;
+import com.dagm.devtool.model.BaseObject;
+import com.dagm.devtool.serializer.FastJsonRedisSerializer;
 import com.dagm.devtool.service.impl.ElasticSearchStoreClientImpl;
 import com.dagm.devtool.service.impl.RedisStoreClientImpl;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
@@ -35,26 +33,15 @@ public class Config extends CachingConfigurerSupport {
 
     @Bean(name = "redisTemplate")
     @ConditionalOnProperty(name = "spring.redis.enable", havingValue = "true")
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-
-        //使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
-        //Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer(Object.class);
-        //使用Fastjson2JsonRedisSerializer来序列化和反序列化redis的value值
-        FastJson2JsonRedisSerializer<Object> serializer = new FastJson2JsonRedisSerializer<>(
-            Object.class);
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
-        mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-        serializer.setObjectMapper(mapper);
-
-        template.setValueSerializer(serializer);
-        //使用StringRedisSerializer来序列化和反序列化redis的key值
-        template.setKeySerializer(new StringRedisSerializer());
-        template.afterPropertiesSet();
-        return template;
+    public RedisTemplate<String, BaseObject> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, BaseObject> redisTemplate = new RedisTemplate<>();
+        StringRedisSerializer stringSerializer = new StringRedisSerializer();
+        redisTemplate.setConnectionFactory(connectionFactory);
+        redisTemplate.setKeySerializer(stringSerializer);
+        redisTemplate.setValueSerializer(new FastJsonRedisSerializer<>(BaseObject.class));
+        redisTemplate.setHashKeySerializer(stringSerializer);
+        redisTemplate.setHashValueSerializer(new FastJsonRedisSerializer<>(BaseObject.class));
+        return redisTemplate;
     }
 }
 

@@ -1,6 +1,7 @@
 package com.dagm.devtool.service;
 
 import com.dagm.devtool.cache.StoreKey;
+import com.dagm.devtool.model.BaseObject;
 
 /**
  * 提供客户端所有的 redis 接口
@@ -41,23 +42,21 @@ public interface RedisStoreClient {
     /**
      * 带有过期时间的incr操作
      *
-     * @param amount 要增加的值
      * @param key redis key
      * @param expireInSeconds 初始化 key 的过期时间
      * @param defaultValue 初始化 key 的默认值
      * @return 增长后 key 的值,如果 Key 不存在，会创建这个 Key，且值为 defaultValue,然后再增加amount, 过期时间为 defaultExpire
      */
-    Long incrBy(StoreKey key, long amount, int expireInSeconds, long defaultValue);
+    Long incr(StoreKey key,  int expireInSeconds, long defaultValue);
 
     /**
      * 带有过期时间的incr操作
      *
-     * @param amount 要增加的值
      * @param key redis key
      * @param expireInSeconds 初始化 key 的过期时间
      * @return 增长后 key 的值,如果 Key 不存在，会创建这个 Key : 值=amount ,过期时间为 expireInSeconds
      */
-    Long incrBy(StoreKey key, long amount, int expireInSeconds);
+    Long incr(StoreKey key, int expireInSeconds);
 
     /**
      * 删除指定 Key
@@ -145,7 +144,7 @@ public interface RedisStoreClient {
      * @param <T> t
      * @return 返回给定 key 的旧值。当 key 不存在时，返回 null 。
      */
-    <T> T getSet(StoreKey key, Object value);
+    <T> T getSet(StoreKey key, BaseObject value);
 
 
     /**
@@ -157,7 +156,7 @@ public interface RedisStoreClient {
      * @param expireInSeconds 过期时间
      * @return 旧值
      */
-    <T> T getSet(StoreKey key, Object value, int expireInSeconds);
+    <T> T getSet(StoreKey key, BaseObject value, int expireInSeconds);
 
 
     /**
@@ -167,7 +166,7 @@ public interface RedisStoreClient {
      * @param value redis value
      * @param expireInSeconds 单位 秒
      */
-    void set(StoreKey key, Object value, int expireInSeconds);
+    void set(StoreKey key, BaseObject value, int expireInSeconds);
 
     /**
      * 添加 Key 对应的值为 Value，只有当 Key 不存在时才添加，如果 Key 已经存在，不改变现有的值
@@ -177,7 +176,7 @@ public interface RedisStoreClient {
      * @param expireInSeconds 过期时间
      * @return 如果 Key 不存在且添加成功，返回 true 如果 Key 已经存在，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
      */
-    Boolean setnx(StoreKey key, Object value, int expireInSeconds);
+    Boolean setnx(StoreKey key, BaseObject value, int expireInSeconds);
 
 
     /**
@@ -187,7 +186,7 @@ public interface RedisStoreClient {
      * @param value 要添加的 Value
      * @return 如果 Key 存在且添加成功，返回 true 如果操作失败，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
      */
-    Boolean setxx(StoreKey key, Object value);
+    Boolean setxx(StoreKey key, BaseObject value);
 
     /**
      * 添加 Key 对应的值为 Value，只有当 Key 存在时才添加，如果 Key 不存在，则不会进行操作
@@ -197,5 +196,5 @@ public interface RedisStoreClient {
      * @param expireInSeconds 过期时间
      * @return 如果 Key 存在且添加成功，返回 true 如果操作失败，返回 false 如：如果需要捕获超时异常，可以捕获 StoreTimeoutException
      */
-    Boolean setxx(StoreKey key, Object value, int expireInSeconds);
+    Boolean setxx(StoreKey key, BaseObject value, int expireInSeconds);
 }
