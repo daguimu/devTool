@@ -5,7 +5,6 @@
  */
 package com.dagm.devtool.service.tempconfig;
 
-import com.dagm.devtool.model.BaseObject;
 import com.dagm.devtool.serializer.FastJsonRedisSerializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -22,14 +21,14 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisTemplateConfig {
     @Bean(name = "perTemplate")
     @ConditionalOnProperty(name = "spring.redis.enable", havingValue = "true")
-    public RedisTemplate<String, BaseObject> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, BaseObject> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         StringRedisSerializer stringSerializer = new StringRedisSerializer();
         redisTemplate.setConnectionFactory(connectionFactory);
         redisTemplate.setKeySerializer(stringSerializer);
-        redisTemplate.setValueSerializer(new FastJsonRedisSerializer<>(BaseObject.class));
+        redisTemplate.setValueSerializer(new FastJsonRedisSerializer<>(Object.class));
         redisTemplate.setHashKeySerializer(stringSerializer);
-        redisTemplate.setHashValueSerializer(new FastJsonRedisSerializer<>(BaseObject.class));
+        redisTemplate.setHashValueSerializer(new FastJsonRedisSerializer<>(Object.class));
         return redisTemplate;
     }
 }
