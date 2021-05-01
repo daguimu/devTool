@@ -108,7 +108,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      * @return 增长后 key 的值,如果 Key 不存在，会创建这个 Key，且值为 defaultValue,然后再增加amount, 过期时间为 defaultExpire
      */
     @Override
-    public Long incr(StoreKey key, int expireInSeconds, long defaultValue) {
+    public Long incr(StoreKey key, int expireInSeconds, int defaultValue) {
         try {
             DefaultRedisScript<Long> script = new DefaultRedisScript<>();
             script.setResultType(Long.class);

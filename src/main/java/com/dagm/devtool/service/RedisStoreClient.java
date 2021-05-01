@@ -49,7 +49,7 @@ public interface RedisStoreClient {
      * @param defaultValue    初始化 key 的默认值
      * @return 增长后 key 的值,如果 Key 不存在，会创建这个 Key，且值为 defaultValue,然后再增加amount, 过期时间为 defaultExpire
      */
-    Long incr(StoreKey key, int expireInSeconds, long defaultValue);
+    Long incr(StoreKey key, int expireInSeconds, int defaultValue);
 
     /**
      * 带有过期时间的incr操作
