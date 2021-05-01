@@ -7,29 +7,29 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
 
-    private final static ParserConfig defaultRedisConfig = new ParserConfig();
+    private final static ParserConfig DEFAULT_REDIS_CONFIG = new ParserConfig();
 
     static {
-        defaultRedisConfig.setAutoTypeSupport(true);
+        DEFAULT_REDIS_CONFIG.setAutoTypeSupport(true);
     }
 
     /**
-     * DEFAULT_CHARSET <br>
+     * DEFAULT_CHARSET
      */
-    public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
     /**
-     * clazz 反序列化类<br>
+     * clazz 反序列化类
      */
     private Class<T> clazz;
 
     /**
-     * <Description> 构造器<br>
-     *
      * @param clazz 反序列化目标类
+     * @Description: 构造器
      */
     public FastJsonRedisSerializer(Class<T> clazz) {
         super();
@@ -37,13 +37,11 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
     }
 
     /**
-     * Description: 序列化<br>
+     * Description: 序列化
      *
-     * @param t
-     * @return
-     * @throws SerializationException <br>
-     * @author xubin<br>
-     * @taskId <br>
+     * @param t 将要被序列化的对象
+     * @return 返回序列化的二进制数组
+     * @author Guimu
      */
     @Override
     public byte[] serialize(T t) throws SerializationException {
@@ -55,13 +53,11 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
 
 
     /**
-     * Description: 反序列化<br>
+     * Description: 反序列化
      *
-     * @param bytes
-     * @return
-     * @throws SerializationException <br>
-     * @author xubin<br>
-     * @taskId <br>
+     * @param bytes 将要反序列化的二进制数组
+     * @return 反序列化后的结果
+     * @author Guimu
      */
     @Override
     public T deserialize(byte[] bytes) throws SerializationException {
@@ -69,8 +65,7 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
             return null;
         }
         String str = new String(bytes, DEFAULT_CHARSET);
-//        return (T) JSON.parseObject(str, clazz, defaultRedisConfig);
-        return (T) JSONObject.parseObject(str, clazz, defaultRedisConfig);
+        return (T) JSONObject.parseObject(str, clazz, DEFAULT_REDIS_CONFIG);
     }
 
 }
