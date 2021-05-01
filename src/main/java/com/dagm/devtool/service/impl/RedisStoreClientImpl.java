@@ -56,7 +56,7 @@ public class RedisStoreClientImpl implements RedisStoreClient {
     private static final String INCR_SCRIPT_DEFAULT = "local val = nil if redis.call('EXISTS',KEYS[1]) == 1 then val = redis.call('INCR',KEYS[1]) redis.call('expire',KEYS[1],ARGV[1]) return val else  redis.call('set',KEYS[1], ARGV[2]) redis.call('expire',KEYS[1],ARGV[1]) return tonumber(ARGV[2]) end";
 
 
-    @Resource(name = "redisTemplate")
+    @Resource(name = "perTemplate")
     private RedisTemplate<String, BaseObject
             > redisTemplate;
 
