@@ -5,12 +5,13 @@
  */
 package com.dagm.devtool.service;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Guimu
@@ -68,6 +69,7 @@ public interface ElasticSearchStoreClient {
      * @param docType : 类型
      * @param searchRequestBuilder builder
      * @throws java.io.IOException io 异常
+     * @return SearchResponse 搜索结果响应
      * @author Guimu
      * @date 2020/6/9
      */
@@ -80,6 +82,7 @@ public interface ElasticSearchStoreClient {
      * @param searchType : 搜索类型
      * @param searchRequestBuilder : builder
      * @throws java.io.IOException io 异常
+     * @return SearchResponse 搜索结果响应
      * @author Guimu
      * @date 2020/6/9
      */

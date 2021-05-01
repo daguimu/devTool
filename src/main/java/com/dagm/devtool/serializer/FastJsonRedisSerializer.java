@@ -28,8 +28,8 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
     private Class<T> clazz;
 
     /**
+     * 构造器
      * @param clazz 反序列化目标类
-     * @Description: 构造器
      */
     public FastJsonRedisSerializer(Class<T> clazz) {
         super();
@@ -37,7 +37,7 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
     }
 
     /**
-     * Description: 序列化
+     * 序列化
      *
      * @param t 将要被序列化的对象
      * @return 返回序列化的二进制数组
@@ -53,10 +53,10 @@ public class FastJsonRedisSerializer<T> implements RedisSerializer<T> {
 
 
     /**
-     * Description: 反序列化
+     * 反序列化
      *
      * @param bytes 将要反序列化的二进制数组
-     * @return 反序列化后的结果
+     * @return T 反序列化后的结果
      * @author Guimu
      */
     @Override
