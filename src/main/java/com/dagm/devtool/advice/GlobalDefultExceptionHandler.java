@@ -8,7 +8,7 @@ package com.dagm.devtool.advice;
 import com.dagm.devtool.exceptions.CommonException;
 import com.dagm.devtool.res.BaseResult;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;

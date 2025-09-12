@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn clean:*)",
+      "Bash(mvn dependency:*)",
+      "Read(//Users/guimu/.m2/repository/org/elasticsearch/**)",
+      "Bash(claude-code --list-mcp-servers)",
+      "Bash(java:*)",
+      "WebSearch",
+      "Read(//Library/Java/JavaVirtualMachines/**)",
+      "Bash(echo:*)",
+      "Bash(export:*)",
+      "Bash(JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home mvn clean compile)",
+      "Bash(JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home mvn clean compile)",
+      "Bash(/usr/libexec/java_home:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

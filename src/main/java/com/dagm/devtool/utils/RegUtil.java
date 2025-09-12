@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class RegUtil {
 
     /**
-     * @param reg 正则表达式
+     * @param reg    正则表达式
      * @param source 待校验的员数据
      * @return boolean
      * @author dagm
@@ -29,7 +29,7 @@ public class RegUtil {
     }
 
     /**
-     * @param reg 正则表达式
+     * @param reg    正则表达式
      * @param source 源数据
      * @return List
      * @author dagm

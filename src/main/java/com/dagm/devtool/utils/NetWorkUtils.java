@@ -5,7 +5,8 @@
  */
 package com.dagm.devtool.utils;
 
-import sun.net.util.IPAddressUtil;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * @author Guimu
@@ -14,8 +15,12 @@ import sun.net.util.IPAddressUtil;
 public class NetWorkUtils {
 
     public static boolean internalIp(String ip) {
-        byte[] addr = IPAddressUtil.textToNumericFormatV4(ip);
-        return internalIp(addr);
+        try {
+            InetAddress addr = InetAddress.getByName(ip);
+            return internalIp(addr.getAddress());
+        } catch (UnknownHostException e) {
+            return false;
+        }
     }
 
     public static boolean internalIp(byte[] addr) {

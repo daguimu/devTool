@@ -3,12 +3,12 @@ package com.dagm.devtool.interceptor;
 import com.dagm.devtool.utils.NetWorkUtils;
 import com.dagm.devtool.utils.ResponseUtils;
 import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
  * 前置检查拦截器
@@ -18,7 +18,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
  **/
 @Component
 @Slf4j
-public class InnerInterceptor extends HandlerInterceptorAdapter {
+public class InnerInterceptor implements HandlerInterceptor {
 
 
     @Override

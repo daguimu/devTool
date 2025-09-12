@@ -5,12 +5,11 @@
  */
 package com.dagm.devtool.utils;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson2.JSONObject;
 import com.dagm.devtool.res.BaseResult;
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author Guimu
@@ -23,8 +22,7 @@ public class ResponseUtils {
         response.setContentType("application/json; charset=utf-8");
         PrintWriter writer = response.getWriter();
         BaseResult<String> bwJsonResult = BaseResult.generateFailureResult(errorMsg);
-        writer.print(JSONObject.toJSONString(bwJsonResult, SerializerFeature.WriteMapNullValue,
-            SerializerFeature.WriteDateUseDateFormat));
+        writer.print(JSONObject.toJSONString(bwJsonResult));
         response.flushBuffer();
         writer.close();
     }

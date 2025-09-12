@@ -51,6 +51,16 @@ public interface RedisStoreClient {
     Long incr(StoreKey key, int expireInSeconds, int defaultValue);
 
     /**
+     * @param key             : redis key
+     * @param expireInSeconds : 过期时间
+     * @param defaultValue    默认值
+     * @return java.lang.Long
+     * @author Guimu
+     * @date 2021/5/6
+     */
+    Long incrBy(StoreKey key, int amount, int expireInSeconds, int defaultValue);
+
+    /**
      * 带有过期时间的incr操作
      *
      * @param key             redis key

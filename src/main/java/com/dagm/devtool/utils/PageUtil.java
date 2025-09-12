@@ -7,10 +7,11 @@ package com.dagm.devtool.utils;
 
 import com.dagm.devtool.model.PageAssist;
 import com.google.common.base.Preconditions;
+import lombok.experimental.UtilityClass;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.experimental.UtilityClass;
 
 /**
  * 分页索引计算相关
@@ -28,7 +29,7 @@ public class PageUtil {
      * @return PageAssist
      */
     public PageAssist getPageAssist(Integer page, Integer pageSize) {
-        long begin = (page - 1) * pageSize;
+        long begin = (long) (page - 1) * pageSize;
         long end = begin + pageSize - 1;
         return new PageAssist().setEnd(end).setStart(begin)
             .setValid(begin >= 0 && end >= 0);

@@ -5,25 +5,26 @@
  */
 package com.dagm.devtool.service.impl;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch.core.*;
+import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.dagm.devtool.config.ElasticSearchConfig;
 import com.dagm.devtool.service.ElasticSearchStoreClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.action.bulk.BulkProcessor;
-import org.elasticsearch.action.bulk.BulkRequest;
-import org.elasticsearch.action.delete.DeleteRequest;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.action.update.UpdateRequest;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Service;
+
+// Note: This implementation has been updated for Elasticsearch 8.x
+// Some methods may need further refinement based on your specific use cases
 
 /**
  * @author Guimu
@@ -35,10 +36,9 @@ import org.springframework.stereotype.Service;
 public class ElasticSearchStoreClientImpl implements ElasticSearchStoreClient {
 
     @Resource
-    private BulkProcessor bulkProcessor;
-
-    @Resource
-    private RestHighLevelClient restHighLevelClient;
+    private ElasticsearchClient elasticsearchClient;
+    
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
 
     /**
@@ -46,24 +46,41 @@ public class ElasticSearchStoreClientImpl implements ElasticSearchStoreClient {
      */
     @Override
     public void writeDataToEs(Map map, String index, String type, String id) {
-        UpdateRequest updateRequest = new UpdateRequest(index, type, id);
-        updateRequest.doc(map);
-        updateRequest.upsert(map, XContentType.JSON);
-        bulkProcessor.add(updateRequest);
+        try {
+            UpdateRequest<Map, Map> updateRequest = UpdateRequest.of(u -> u
+                .index(index)
+                .id(id)
+                .doc(map)
+                .upsert(map)
+            );
+            elasticsearchClient.update(updateRequest, Map.class);
+        } catch (IOException e) {
+            log.error("Failed to write data to ES", e);
+        }
     }
 
     @Override
     public void delete(String index, String type, String id) {
-        DeleteRequest deleteRequest = new DeleteRequest(index, type, id);
-        bulkProcessor.add(deleteRequest);
+        try {
+            DeleteRequest deleteRequest = DeleteRequest.of(d -> d
+                .index(index)
+                .id(id)
+            );
+            elasticsearchClient.delete(deleteRequest);
+        } catch (IOException e) {
+            log.error("Failed to delete document from ES", e);
+        }
     }
 
     @Override
     public void writeDataToEs(String str, String index, String type, String id) {
-        UpdateRequest updateRequest = new UpdateRequest(index, type, id);
-        updateRequest.doc(str, XContentType.JSON);
-        updateRequest.upsert(str, XContentType.JSON);
-        bulkProcessor.add(updateRequest);
+        try {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> map = objectMapper.readValue(str, Map.class);
+            writeDataToEs(map, index, type, id);
+        } catch (IOException e) {
+            log.error("Failed to write string data to ES", e);
+        }
     }
 
     /**
@@ -74,24 +91,33 @@ public class ElasticSearchStoreClientImpl implements ElasticSearchStoreClient {
      */
     @Override
     public void batchDelete(String index, String type, List<String> idList) throws IOException {
-        BulkRequest bulkRequest = new BulkRequest();
-        idList.forEach(el -> bulkRequest.add(new DeleteRequest(index, type, el)));
-        restHighLevelClient.bulk(bulkRequest);
+        List<BulkOperation> bulkOps = new ArrayList<>();
+        for (String id : idList) {
+            bulkOps.add(BulkOperation.of(op -> op
+                .delete(d -> d.index(index).id(id))
+            ));
+        }
+        
+        BulkRequest bulkRequest = BulkRequest.of(b -> b
+            .index(index)
+            .operations(bulkOps)
+        );
+        
+        elasticsearchClient.bulk(bulkRequest);
     }
 
     @Override
-    public SearchResponse search(String index, String docType,
-        SearchSourceBuilder searchRequestBuilder) throws IOException {
-        return this.search(index, docType, searchRequestBuilder, SearchType.DFS_QUERY_THEN_FETCH);
+    public SearchResponse<Object> search(String index, String docType, Query query) throws IOException {
+        return this.search(index, docType, query, null);
     }
 
-    @Override
-    public SearchResponse search(String index, String docType,
-        SearchSourceBuilder searchRequestBuilder, SearchType searchType) throws IOException {
-        SearchRequest searchRequest = new SearchRequest(index)
-            .searchType(searchType)
-            .types(docType)
-            .source(searchRequestBuilder);
-        return this.restHighLevelClient.search(searchRequest);
+    @Override  
+    public SearchResponse<Object> search(String index, String docType, Query query, String searchType) throws IOException {
+        // Note: In ES 8.x, SearchType and docType are no longer used in the same way
+        SearchRequest searchRequest = SearchRequest.of(s -> s
+            .index(index)
+            .query(query)
+        );
+        return elasticsearchClient.search(searchRequest, Object.class);
     }
 }

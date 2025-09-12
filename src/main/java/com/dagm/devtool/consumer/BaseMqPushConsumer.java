@@ -5,10 +5,10 @@
  */
 package com.dagm.devtool.consumer;
 
-import com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer;
-import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
-import com.alibaba.rocketmq.client.exception.MQClientException;
-import com.alibaba.rocketmq.common.consumer.ConsumeFromWhere;
+import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
+import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import com.dagm.devtool.config.MqConsumerConfig;
 import com.dagm.devtool.enums.RocketMqTipEnum;
 import com.dagm.devtool.exceptions.CommonException;
@@ -54,8 +54,8 @@ public class BaseMqPushConsumer extends DefaultMQPushConsumer {
         this.subscribe(topic, "*");
         super.start();
         log.info("consumer is start !!! groupName:{},topics:{},namesrvAddr:{}",
-            super.getConsumerGroup(),
-            this.getTopic(), this.getNamesrvAddr());
+                super.getConsumerGroup(),
+                this.getTopic(), this.getNamesrvAddr());
     }
 
     private void checkAndInit() {

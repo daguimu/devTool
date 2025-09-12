@@ -5,9 +5,8 @@
  */
 package com.dagm.devtool.service;
 
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 
 import java.io.IOException;
 import java.util.List;
@@ -66,26 +65,24 @@ public interface ElasticSearchStoreClient {
 
     /**
      * @param index : 索引
-     * @param docType : 类型
-     * @param searchRequestBuilder builder
+     * @param docType : 类型 (deprecated in ES 8.x)
+     * @param query : 查询对象
      * @throws java.io.IOException io 异常
      * @return SearchResponse 搜索结果响应
      * @author Guimu
      * @date 2020/6/9
      */
-    SearchResponse search(String index, String docType,
-        SearchSourceBuilder searchRequestBuilder) throws IOException;
+    SearchResponse<Object> search(String index, String docType, Query query) throws IOException;
 
     /**
      * @param index : 索引
-     * @param docType : 类型
-     * @param searchType : 搜索类型
-     * @param searchRequestBuilder : builder
+     * @param docType : 类型 (deprecated in ES 8.x)
+     * @param query : 查询对象
+     * @param searchType : 搜索类型 (deprecated in ES 8.x)
      * @throws java.io.IOException io 异常
      * @return SearchResponse 搜索结果响应
      * @author Guimu
      * @date 2020/6/9
      */
-    SearchResponse search(String index, String docType,
-        SearchSourceBuilder searchRequestBuilder, SearchType searchType) throws IOException;
+    SearchResponse<Object> search(String index, String docType, Query query, String searchType) throws IOException;
 }

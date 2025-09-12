@@ -17,7 +17,8 @@ import org.springframework.scripting.support.StaticScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,10 +55,19 @@ public class RedisStoreClientImpl implements RedisStoreClient {
      */
     private static final String INCR_SCRIPT_DEFAULT = "local val = nil if redis.call('EXISTS',KEYS[1]) == 1 then val = redis.call('INCR',KEYS[1]) redis.call('expire',KEYS[1],ARGV[1]) return val else  redis.call('set',KEYS[1], ARGV[2]) redis.call('expire',KEYS[1],ARGV[1]) return tonumber(ARGV[2]) end";
 
+    /**
+     * 初始化自增key 并设置过期时间及默认值
+     */
+    private static final String INCRBY_SCRIPT_DEFAULT = "local val = nil if redis.call('EXISTS',KEYS[1]) == 1 then   val = redis.call('INCRBY',KEYS[1],ARGV[1]) redis.call('expire',KEYS[1],ARGV[2]) return val else redis.call('set',KEYS[1], ARGV[3]) redis.call('expire',KEYS[1],ARGV[2]) return tonumber(ARGV[3]) end";
+
+    /**
+     * setnx 加过期时间script
+     */
+    private static final String SETNX_EXPIRE_SCRIPT = "local val = nil if redis.call('EXISTS',KEYS[1]) == 0 then val = redis.call('SET',KEYS[1],ARGV[1]) redis.call('expire',KEYS[1],ARGV[2]) return val else return nil end";
+
 
     @Resource(name = "perTemplate")
-    private RedisTemplate<String, Object
-            > redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 判断是否存在某key
@@ -112,10 +122,22 @@ public class RedisStoreClientImpl implements RedisStoreClient {
             DefaultRedisScript<Long> script = new DefaultRedisScript<>();
             script.setResultType(Long.class);
             script.setScriptSource(new StaticScriptSource(INCR_SCRIPT_DEFAULT));
-            List<String> keys = new LinkedList<>();
-            keys.add(key.getKey());
             return redisTemplate
-                    .execute(script, keys, expireInSeconds, defaultValue);
+                    .execute(script, Collections.singletonList(key.getKey()), expireInSeconds, defaultValue);
+        } catch (Exception e) {
+            log.error("redis incrBy with default  failed", e);
+            return null;
+        }
+    }
+
+    @Override
+    public Long incrBy(StoreKey key, int amount, int expireInSeconds, int defaultValue) {
+        try {
+            DefaultRedisScript<Long> script = new DefaultRedisScript<>();
+            script.setResultType(Long.class);
+            script.setScriptSource(new StaticScriptSource(INCRBY_SCRIPT_DEFAULT));
+            return redisTemplate
+                    .execute(script, Collections.singletonList(key.getKey()), amount, expireInSeconds, defaultValue);
         } catch (Exception e) {
             log.error("redis incrBy with default  failed", e);
             return null;

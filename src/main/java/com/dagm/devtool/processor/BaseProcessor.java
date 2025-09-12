@@ -5,16 +5,17 @@
  */
 package com.dagm.devtool.processor;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import com.alibaba.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import com.alibaba.rocketmq.client.consumer.listener.MessageListenerConcurrently;
-import com.alibaba.rocketmq.common.message.MessageExt;
+import com.alibaba.fastjson2.JSON;
+import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
+import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
+import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import org.apache.rocketmq.common.message.MessageExt;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.Charsets;
+
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.Charsets;
 
 /**
  * @author Guimu
@@ -33,7 +34,7 @@ public abstract class BaseProcessor<T> implements MessageListenerConcurrently {
      */
     @Override
     public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list,
-        ConsumeConcurrentlyContext consumeConcurrentlyContext) {
+                                                    ConsumeConcurrentlyContext consumeConcurrentlyContext) {
 
         MessageExt messageExt = list.get(0);
         //消息已经重试了3次，如果不需要再次消费，则返回成功
@@ -45,7 +46,7 @@ public abstract class BaseProcessor<T> implements MessageListenerConcurrently {
         try {
             messageBody = new String(messageExt.getBody(), Charsets.UTF_8.displayName());
             Class<T> clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
-                .getActualTypeArguments()[0];
+                    .getActualTypeArguments()[0];
             log.info("BaseProcessor received a message body:{}", messageBody);
             this.consume(JSON.parseObject(messageBody, clazz));
         } catch (UnsupportedEncodingException e) {
