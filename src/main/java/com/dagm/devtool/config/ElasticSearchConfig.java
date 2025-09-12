@@ -88,7 +88,7 @@ public class ElasticSearchConfig {
             RestClientBuilder restClientBuilder = RestClient.builder(new HttpHost(elasticProperties.getHost(), Integer.parseInt(elasticProperties.getPort()), SCHEME));
             restClientBuilder.setRequestConfigCallback((builder) -> builder.setConnectTimeout(CONNECT_TIME_OUT).setSocketTimeout(SOCKET_TIME_OUT).setConnectionRequestTimeout(CONNECTION_REQUEST_TIMEOUT));
             restClientBuilder.setHttpClientConfigCallback((builder) -> builder.setMaxConnTotal(MAX_CONNECT_NUM).setMaxConnPerRoute(MAX_CONNECT_PER_ROUTE));
-            
+
             RestClient restClient = restClientBuilder.build();
             RestClientTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
             elasticsearchClient = new ElasticsearchClient(transport);
