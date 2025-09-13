@@ -18,7 +18,8 @@
       "Read(//Users/guimu/.m2/**)",
       "Bash(mvn versions:set:*)",
       "Read(//Users/guimu/.gnupg/**)",
-      "WebFetch(domain:central.sonatype.org)"
+      "WebFetch(domain:central.sonatype.org)",
+      "Bash(chmod:*)"
     ],
     "deny": [],
     "ask": []
