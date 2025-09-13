@@ -12,7 +12,7 @@
 
     <groupId>com.dagm</groupId>
     <artifactId>dev-tool</artifactId>
-    <version>0.1</version>
+    <version>0.1-SNAPSHOT</version>
     <name>dev-tool</name>
     <description>tool one of dev</description>
     <url>https://github.com/guimu/devTool</url>
@@ -183,31 +183,24 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <keyname>C86D871CD479478F</keyname>
                             <gpgArguments>
                                 <arg>--batch</arg>
                                 <arg>--yes</arg>
                                 <arg>--pinentry-mode</arg>
                                 <arg>loopback</arg>
                             </gpgArguments>
+                            <passphrase>${gpg.passphrase}</passphrase>
                         </configuration>
                     </plugin>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <version>3.1.3</version>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.6.0</version>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.13</version>
                         <extensions>true</extensions>
                         <configuration>
-                            <publishingServerId>central</publishingServerId>
-                            <autoPublish>false</autoPublish>
+                            <serverId>central</serverId>
+                            <nexusUrl>https://central.sonatype.com/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
                         </configuration>
                     </plugin>
                 </plugins>

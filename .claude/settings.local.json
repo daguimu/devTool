@@ -13,7 +13,12 @@
       "Bash(JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home mvn clean compile)",
       "Bash(JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home mvn clean compile)",
       "Bash(/usr/libexec/java_home:*)",
-      "Read(//Users/guimu/Downloads/jdk-21.0.5.jdk/Contents/Home/**)"
+      "Read(//Users/guimu/Downloads/jdk-21.0.5.jdk/Contents/Home/**)",
+      "Bash(gpg:*)",
+      "Read(//Users/guimu/.m2/**)",
+      "Bash(mvn versions:set:*)",
+      "Read(//Users/guimu/.gnupg/**)",
+      "WebFetch(domain:central.sonatype.org)"
     ],
     "deny": [],
     "ask": []
