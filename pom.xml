@@ -16,7 +16,7 @@
     <version>0.1</version>
     <name>dev-tool</name>
     <description>tool one of dev</description>
-    <url>https://github.com/guimu/devTool</url>
+    <url>https://github.com/daguimu/devTool</url>
 
     <licenses>
         <license>
@@ -26,9 +26,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/guimu/devTool.git</connection>
-        <developerConnection>scm:git:ssh://github.com:guimu/devTool.git</developerConnection>
-        <url>http://github.com/guimu/devTool/tree/master</url>
+        <connection>scm:git:git://github.com/daguimu/devTool.git</connection>
+        <developerConnection>scm:git:ssh://github.com:daguimu/devTool.git</developerConnection>
+        <url>http://github.com/daguimu/devTool/tree/master</url>
     </scm>
 
     <properties>
