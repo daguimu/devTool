@@ -17,7 +17,7 @@ import org.springframework.scripting.support.StaticScriptSource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import jakarta.annotation.Resource;
+import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;

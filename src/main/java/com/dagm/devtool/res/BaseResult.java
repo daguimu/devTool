@@ -6,13 +6,13 @@
 package com.dagm.devtool.res;
 
 
-import static com.dagm.devtool.common.BaseTipCode.FAILURE;
-import static com.dagm.devtool.common.BaseTipCode.SUCCESS;
-
 import com.dagm.devtool.common.BaseCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+
+import static com.dagm.devtool.common.BaseTipCode.FAILURE;
+import static com.dagm.devtool.common.BaseTipCode.SUCCESS;
 
 /**
  * @author Guimu
@@ -32,13 +32,14 @@ public class BaseResult<T> {
     /**
      * 默认成功的 BaseResult
      *
-     * @return com.dagm.devtool.res.BaseResult java.lang.String
      * @author Guimu
      * @date 2020/1/9
      */
     public static BaseResult<String> generateSuccessResult() {
-        return new BaseResult<String>().setSuccess(true).setCode(SUCCESS.getCode())
-            .setMsg(SUCCESS.getMsg());
+        return new BaseResult<String>()
+                .setSuccess(true)
+                .setCode(SUCCESS.getCode())
+                .setMsg(SUCCESS.getMsg());
     }
 
     /**
@@ -49,9 +50,11 @@ public class BaseResult<T> {
      * @author Guimu 提示信息
      * @date 2020/1/9
      */
-    public static BaseResult<String> generateFailureResult(BaseCode baseCode) {
-        return new BaseResult<String>().setSuccess(false).setCode(FAILURE.getCode())
-            .setMsg(baseCode.getMsg());
+    public static BaseResult<String> generateSpecResult(BaseCode baseCode) {
+        return new BaseResult<String>()
+                .setSuccess(SUCCESS.getCode().equals(baseCode.getCode()))
+                .setCode(baseCode.getCode())
+                .setMsg(baseCode.getMsg());
     }
 
     /**
@@ -63,21 +66,26 @@ public class BaseResult<T> {
      * @date 2020/1/9
      */
     public static BaseResult<String> generateFailureResult(String errorMsg) {
-        return new BaseResult<String>().setSuccess(false).setCode(FAILURE.getCode())
-            .setMsg(errorMsg);
+        return new BaseResult<String>()
+                .setSuccess(false)
+                .setCode(FAILURE.getCode())
+                .setMsg(errorMsg);
     }
 
     /**
      * 根据data构建对应的 BaseResult
      *
      * @param data 响应成功 的data信息
-     * @param <T> t
+     * @param <T>  t
      * @return com.dagm.devtool.res.BaseResult T
      * @author Guimu
      * @date 2020/1/9
      */
     public static <T> BaseResult<T> generateSuccessResult(T data) {
-        return new BaseResult<T>().setSuccess(true).setCode(SUCCESS.getCode())
-            .setMsg(SUCCESS.getMsg()).setData(data);
+        return new BaseResult<T>()
+                .setSuccess(true)
+                .setCode(SUCCESS.getCode())
+                .setMsg(SUCCESS.getMsg())
+                .setData(data);
     }
 }

@@ -60,7 +60,7 @@ public enum DateFormatEnum {
      */
     YEAR_MONTH("年-月", "yyyy-MM", "(\\d{4})-(0[1-9]|1[0-2])");
 
-    private String desc;
-    private String format;
-    private String reg;
+    private final String desc;
+    private final String format;
+    private final String reg;
 }

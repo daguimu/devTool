@@ -19,7 +19,9 @@
       "Bash(mvn versions:set:*)",
       "Read(//Users/guimu/.gnupg/**)",
       "WebFetch(domain:central.sonatype.org)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.jdk/Contents/Home mvn clean compile)",
+      "Bash(JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.15.jdk/Contents/Home mvn clean compile)"
     ],
     "deny": [],
     "ask": []
